@@ -16,7 +16,7 @@ class TCEvent {
   final TCRepeatRule? repeatRule;
   final List<TCAlarm> alarms;
 
-  TCEvent({
+  const TCEvent({
     required this.summary,
     required this.dtStart,
     required this.dtEnd,
