@@ -36,8 +36,13 @@ class TCConfigs {
   final TCTimescaleZoom timescaleZoom;
   final Color secondaryColor;
   final Color primaryColor;
+  final Color metaColor;
+  final Color panelColor;
   final double windowWidth;
   final double windowHeight;
+  final double fontSize;
+  final String? fontFamily;
+  final Color timeMarkerColor;
 
   const TCConfigs({
     required this.calendars,
@@ -45,9 +50,14 @@ class TCConfigs {
     required this.timescaleZoom,
     required this.primaryColor,
     required this.secondaryColor,
+    required this.panelColor,
+    required this.metaColor,
     required this.windowHeight,
     required this.windowWidth,
-  });
+    this.fontSize = 11,
+    this.fontFamily,
+    Color? timeMarkerColor,
+  }) : timeMarkerColor = timeMarkerColor ?? secondaryColor;
 }
 
 class TCCalendar {

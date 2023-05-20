@@ -20,12 +20,14 @@ void main() {
     ],
   );
   */
-  final TCConfigs tcConfigs = TCConfigs(
+  const TCConfigs tcConfigs = TCConfigs(
     calendars: [],
     instanceView: TCInstanceView.week,
     timescaleZoom: TCTimescaleZoom.x100,
     primaryColor: Colors.white70,
     secondaryColor: Colors.blueGrey,
+    metaColor: Colors.black,
+    panelColor: Colors.pink,
     windowWidth: 1900,
     windowHeight: 1200,
   );
@@ -51,3 +53,5 @@ class App extends StatelessWidget {
     );
   }
 }
+
+///TODO: move the day headers from individual columns to s separate Row item, make it sticky
