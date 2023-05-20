@@ -4,24 +4,30 @@ class TCInstance extends StatefulWidget {
   final TCConfigs configs;
   final LinkedScrollableControlPoint controlPoint =
       LinkedScrollableControlPoint();
+  final List<TCCalendar> calendars;
+  final List<TCEvent> events = [];
+  late DateTime dateNow = DateTime.now();
+  DateTime scopeStartDate = DateTime.now();
+  int dayOfWeek = 0;
 
-  TCInstance({required this.configs, super.key});
+  TCInstance({
+    required this.configs,
+    required this.calendars,
+    super.key,
+  }) {
+    for (TCCalendar cal in calendars) {
+      events.addAll(cal.events);
+    }
+    dayOfWeek = dateNow.weekday;
+    scopeStartDate = DateTime.utc(dateNow.year, dateNow.month, dateNow.day)
+        .subtract(Duration(days: dayOfWeek - 1));
+  }
 
   @override
   State<TCInstance> createState() => _TCTInstanceState();
 }
 
 class _TCTInstanceState extends State<TCInstance> {
-  final List<String> dayLabels = [
-    'MON',
-    'TUE',
-    'WED',
-    'THU',
-    'FRI',
-    'SAT',
-    'SUN',
-  ];
-
   @override
   Widget build(BuildContext context) {
     // Create the column of time markers
@@ -39,9 +45,12 @@ class _TCTInstanceState extends State<TCInstance> {
           flex: 2,
           child: TCColumn(
             configs: widget.configs,
-            dayLabel: dayLabels[index],
-            dateLabel: index.toString().padLeft(2, '0'),
+            dateInfo: widget.scopeStartDate.add(
+              Duration(days: index),
+            ),
             controlPoint: widget.controlPoint,
+            eventsData:
+                widget.events.where((TCEvent e) => e.dtStart is DateTime),
           ),
         );
       },

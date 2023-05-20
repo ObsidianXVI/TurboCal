@@ -2,14 +2,16 @@ part of turbocal;
 
 class TCColumn extends StatefulWidget {
   final TCConfigs configs;
-  final String dayLabel;
-  final String dateLabel;
+  final DateTime dateInfo;
+
   final LinkedScrollableControlPoint controlPoint;
+  final Iterable<TCEvent> eventsData;
+
   const TCColumn({
     required this.configs,
-    required this.dayLabel,
-    required this.dateLabel,
+    required this.dateInfo,
     required this.controlPoint,
+    required this.eventsData,
     super.key,
   });
 
@@ -47,7 +49,7 @@ class _TCColumnState extends State<TCColumn> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                widget.dayLabel,
+                widget.dateInfo.dayName.substring(0, 3).toUpperCase(),
                 style: TextStyle(
                   fontSize: 24,
                   color: widget.configs.metaColor,
@@ -55,7 +57,7 @@ class _TCColumnState extends State<TCColumn> {
               ),
               const SizedBox(width: 20),
               Text(
-                widget.dateLabel,
+                widget.dateInfo.day.toString().padLeft(2, '0'),
                 style: TextStyle(
                   fontSize: 18,
                   color: widget.configs.metaColor,
