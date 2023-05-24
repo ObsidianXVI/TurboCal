@@ -15,6 +15,7 @@ class TCEvent {
   final TCEventTransp transp;
   final TCRepeatRule? repeatRule;
   final List<TCAlarm> alarms;
+  final TCCalendar calendar;
 
   const TCEvent({
     required this.summary,
@@ -27,9 +28,14 @@ class TCEvent {
     required this.status,
     required this.transp,
     required this.dtStamp,
+    required this.calendar,
     this.description,
     this.location,
     this.repeatRule,
     this.alarms = const [],
   });
+
+  bool shouldRenderFor(DateTime currentDate) {
+    return !(currentDate.isBefore(dtStart) || currentDate.isAfter(dtEnd));
+  }
 }

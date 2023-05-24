@@ -41,41 +41,50 @@ class _TCTInstanceState extends State<TCInstance> {
     columns.addAll(List<Widget>.generate(
       widget.configs.instanceView.columnCount,
       (int index) {
+        final DateTime colDateStart =
+            widget.scopeStartDate.add(Duration(days: index));
+        final DateTime colDateEnd = colDateStart.add(const Duration(hours: 24));
+        widget.events.forEach((element) => print(element.dtStart));
+        final Iterable<TCEvent> events = widget.events.where((TCEvent e) =>
+            e.dtStart.isAfter(colDateStart) && e.dtEnd.isBefore(colDateEnd));
         return Expanded(
           flex: 2,
           child: TCColumn(
             configs: widget.configs,
-            dateInfo: widget.scopeStartDate.add(
-              Duration(days: index),
-            ),
+            dateInfo: colDateStart,
             controlPoint: widget.controlPoint,
-            eventsData:
-                widget.events.where((TCEvent e) => e.dtStart is DateTime),
+            eventsData: events,
           ),
         );
       },
     ));
 
-    return Center(
-      child: Container(
-        width: widget.configs.windowWidth,
-        height: widget.configs.windowHeight,
-        color: widget.configs.primaryColor,
-        child: Column(
-          children: [
-            TCPanel(
-              configs: widget.configs,
-              controlPoint: widget.controlPoint,
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Row(
-                  children: columns,
+    return Material(
+      child: Center(
+        child: Container(
+          width: widget.configs.windowWidth,
+          height: widget.configs.windowHeight,
+          color: widget.configs.primaryColor,
+          child: ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: Column(
+              children: [
+                TCPanel(
+                  configs: widget.configs,
+                  controlPoint: widget.controlPoint,
                 ),
-              ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      children: columns,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

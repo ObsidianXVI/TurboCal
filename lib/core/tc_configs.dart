@@ -62,11 +62,10 @@ class TCConfigs {
 
 class TCCalendar {
   final TCSemanticColor semanticColor;
-  final List<TCEvent> events;
+  final List<TCEvent> events = [];
 
-  const TCCalendar({
+  TCCalendar({
     required this.semanticColor,
-    required this.events,
   });
 }
 

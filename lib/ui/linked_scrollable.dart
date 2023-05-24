@@ -16,7 +16,7 @@ class LinkedScrollableControlPoint {
 }
 
 class LinkedScrollable extends StatefulWidget {
-  final Column child;
+  final Widget child;
   final bool isLinked;
   final LinkedScrollableControlPoint controlPoint;
 

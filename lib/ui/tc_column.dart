@@ -67,16 +67,55 @@ class _TCColumnState extends State<TCColumn> {
           ),
         ),
         Expanded(
-          child: LinkedScrollable(
-            isLinked: true,
-            controlPoint: widget.controlPoint,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: colItems,
-            ),
+          child: Stack(
+            children: [
+              LinkedScrollable(
+                isLinked: true,
+                controlPoint: widget.controlPoint,
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: colItems,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10, left: 4),
+                      child: Column(
+                        children: generateEventCanvas(widget.dateInfo),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
+  }
+
+  List<Widget> generateEventCanvas(DateTime currentDay) {
+    final List<Widget> eventBlocks = [];
+    for (TCEvent event in widget.eventsData) {
+      eventBlocks.add(
+        SizedBox(
+          height: (event.dtEnd.difference(currentDay).inMinutes / 60) *
+              widget.configs.timescaleZoom.blockHeight,
+        ),
+      );
+      eventBlocks.add(
+        Container(
+          height: ((event.dtEnd.difference(event.dtStart).inMinutes) / 60) *
+              widget.configs.timescaleZoom.blockHeight,
+          decoration: BoxDecoration(
+              color: event.calendar.semanticColor.color.withOpacity(0.6),
+              border: Border(
+                left: BorderSide(
+                    width: 4, color: event.calendar.semanticColor.color),
+              )),
+        ),
+      );
+    }
+    return eventBlocks;
   }
 }
