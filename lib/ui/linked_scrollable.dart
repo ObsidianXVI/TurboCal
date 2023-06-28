@@ -19,11 +19,13 @@ class LinkedScrollable extends StatefulWidget {
   final Widget child;
   final bool isLinked;
   final LinkedScrollableControlPoint controlPoint;
+  final double height;
 
   const LinkedScrollable({
     required this.child,
     required this.isLinked,
     required this.controlPoint,
+    required this.height,
     super.key,
   });
   @override
@@ -65,7 +67,10 @@ class LinkedScrollableState extends State<LinkedScrollable> {
       },
       child: SingleChildScrollView(
         controller: scrollController,
-        child: widget.child,
+        child: SizedBox(
+          height: widget.height,
+          child: widget.child,
+        ),
       ),
     );
   }

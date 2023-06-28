@@ -38,4 +38,10 @@ class TCEvent {
   bool shouldRenderFor(DateTime currentDate) {
     return !(currentDate.isBefore(dtStart) || currentDate.isAfter(dtEnd));
   }
+
+  bool overlapsWith(TCEvent other) {
+    return ((dtStart.isAfter(other.dtStart) && dtStart.isBefore(other.dtEnd)) ||
+        (dtEnd.isAfter(other.dtStart) && dtEnd.isBefore(other.dtEnd)) ||
+        (dtStart.isAtSameMomentAs(other.dtStart)));
+  }
 }

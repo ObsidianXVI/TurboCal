@@ -17,6 +17,7 @@ class _TCTimeMarkerColumnState extends State<TCTimeMarkerColumn> {
   @override
   Widget build(BuildContext context) {
     return LinkedScrollable(
+      height: widget.configs.windowHeight,
       isLinked: true,
       controlPoint: widget.controlPoint,
       child: Column(

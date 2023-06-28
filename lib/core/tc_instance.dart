@@ -1,6 +1,7 @@
 part of turbocal;
 
 class TCInstance extends StatefulWidget {
+  final GlobalKey globalKey = GlobalKey();
   final TCConfigs configs;
   final LinkedScrollableControlPoint controlPoint =
       LinkedScrollableControlPoint();
@@ -9,6 +10,7 @@ class TCInstance extends StatefulWidget {
   late DateTime dateNow = DateTime.now();
   DateTime scopeStartDate = DateTime.now();
   int dayOfWeek = 0;
+  State? controller;
 
   TCInstance({
     required this.configs,
@@ -24,7 +26,7 @@ class TCInstance extends StatefulWidget {
   }
 
   @override
-  State<TCInstance> createState() => _TCTInstanceState();
+  State<TCInstance> createState() => controller = _TCTInstanceState();
 }
 
 class _TCTInstanceState extends State<TCInstance> {
@@ -44,7 +46,6 @@ class _TCTInstanceState extends State<TCInstance> {
         final DateTime colDateStart =
             widget.scopeStartDate.add(Duration(days: index));
         final DateTime colDateEnd = colDateStart.add(const Duration(hours: 24));
-        widget.events.forEach((element) => print(element.dtStart));
         final Iterable<TCEvent> events = widget.events.where((TCEvent e) =>
             e.dtStart.isAfter(colDateStart) && e.dtEnd.isBefore(colDateEnd));
         return Expanded(
@@ -71,6 +72,7 @@ class _TCTInstanceState extends State<TCInstance> {
             child: Column(
               children: [
                 TCPanel(
+                  tcInstance: widget,
                   configs: widget.configs,
                   controlPoint: widget.controlPoint,
                 ),
