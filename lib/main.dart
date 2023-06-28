@@ -44,9 +44,11 @@ void main() {
     windowWidth: 1900,
     windowHeight: 1200,
   );
-  runApp(App(
-    configs: tcConfigs,
-  ));
+  runApp(
+    App(
+      configs: tcConfigs,
+    ),
+  );
 }
 
 class App extends StatelessWidget {

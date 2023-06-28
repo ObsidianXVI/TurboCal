@@ -90,54 +90,6 @@ class _TCColumnState extends State<TCColumn> {
               ],
             ),
           ),
-          /* Expanded(
-          child: LinkedScrollable(
-            isLinked: true,
-            controlPoint: widget.controlPoint,
-            child: Stack(
-              children: [
-                ...colItems,
-                ...generateEventCanvas(
-                  widget.dateInfo,
-                  widget.configs.windowWidth /
-                      widget.configs.instanceView.columnCount,
-                ),
-              ],
-            ),
-          ),
-        ), */
-          /* Expanded(
-          child: LinkedScrollable(
-            isLinked: true,
-            controlPoint: widget.controlPoint,
-            child: Expanded(
-              child: Column(
-                children: generateEventCanvas(widget.dateInfo),
-              ),
-            ),
-            /* Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: colItems,
-                ),
-                Column(
-                  children: generateEventCanvas(widget.dateInfo),
-                ),
-                /* Padding(
-                  padding: const EdgeInsets.only(right: 10, left: 4),
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: generateEventCanvas(widget.dateInfo),
-                      ),
-                    ],
-                  ),
-                ), */
-              ],
-            ), */
-          ),
-        ), */
         ],
       ),
     );
@@ -153,14 +105,13 @@ class _TCColumnState extends State<TCColumn> {
     TCEvent? prevEvent;
     int overlapCount = 0;
     for (TCEvent event in remEvents) {
-      /* if (prevEvent != null) {
+      if (prevEvent != null) {
         if (event.overlapsWith(prevEvent)) {
-          print('oveerlap');
           overlapCount += 1;
         } else {
           overlapCount -= 1;
         }
-      } */
+      }
       canvasElements.add(
         eventBlock(
           event: event,
@@ -172,10 +123,6 @@ class _TCColumnState extends State<TCColumn> {
       prevEvent = event;
     }
 
-    /* for (TCEvent event in widget.eventsData) {
-        canvasElements.addAll(eventBlock(event, currentDay));
-      } */
-
     return canvasElements;
   }
 
@@ -185,20 +132,22 @@ class _TCColumnState extends State<TCColumn> {
     required int overlapCount,
     required double blockWidth,
   }) {
+    final double itemHeight =
+        ((event.dtEnd.difference(event.dtStart).inMinutes) / 60) *
+            widget.configs.timescaleZoom.blockHeight;
     return Positioned(
       top: (event.dtEnd.difference(currentDay).inMinutes / 60) *
           widget.configs.timescaleZoom.blockHeight,
-      left: (2 * overlapCount) as double,
-      height: ((event.dtEnd.difference(event.dtStart).inMinutes) / 60) *
-          widget.configs.timescaleZoom.blockHeight,
-      width: blockWidth,
+      left: 4 + (8 * overlapCount) as double,
+      right: 10,
+      height: itemHeight,
       child: Container(
         decoration: BoxDecoration(
           color: event.calendar.semanticColor.color.withOpacity(0.3),
           border: Border(
-            left: BorderSide(
-              width: 4,
-              color: event.calendar.semanticColor.color,
+            bottom: BorderSide(
+              width: 1,
+              color: widget.configs.primaryColor,
             ),
           ),
         ),
@@ -206,7 +155,7 @@ class _TCColumnState extends State<TCColumn> {
           children: [
             Positioned(
               top: 2,
-              left: 3,
+              left: 7,
               child: Text(
                 event.summary,
                 style: TextStyle(
@@ -216,20 +165,16 @@ class _TCColumnState extends State<TCColumn> {
                 ),
               ),
             ),
+            Positioned(
+              top: 0,
+              left: 0,
+              width: 4,
+              height: itemHeight,
+              child: Container(color: event.calendar.semanticColor.color),
+            ),
           ],
         ),
       ),
     );
-
-    /* Center(
-        child: Container(
-          width: double.infinity,
-          child: Row(
-            children: [
-              SizedBox(width: (2 * overlapCount) as double),
-              ],
-          ),
-        ),
-      ), */
   }
 }
