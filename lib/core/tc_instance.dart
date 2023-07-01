@@ -1,5 +1,6 @@
 part of turbocal;
 
+//DateTime.now().hour - 1
 class TCInstance extends StatefulWidget {
   final GlobalKey globalKey = GlobalKey();
   final TCConfigs configs;
@@ -30,6 +31,33 @@ class TCInstance extends StatefulWidget {
 }
 
 class _TCTInstanceState extends State<TCInstance> {
+  void scrollCanvasToDefault() {
+    // screen height - TCPanel height
+    final double canvasHeight = DimensionTools.getHeight(context) - 60;
+    final double maxOffset =
+        24 * widget.configs.timescaleZoom.blockHeight - canvasHeight;
+    final double defaultOffset;
+    if (widget.configs.defaultBlockNum != null) {
+      defaultOffset = widget.configs.defaultBlockNum! *
+          widget.configs.timescaleZoom.blockHeight;
+    } else {
+      if (widget.configs.scrollToCurrentTime) {
+        defaultOffset = (DateTime.now().hour - 1) *
+            widget.configs.timescaleZoom.blockHeight;
+      } else {
+        defaultOffset = 0;
+      }
+    }
+    widget.controlPoint
+        .update(defaultOffset > maxOffset ? maxOffset : defaultOffset);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, scrollCanvasToDefault);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Create the column of time markers

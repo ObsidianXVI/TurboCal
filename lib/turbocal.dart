@@ -15,4 +15,6 @@ part './ui/linked_scrollable.dart';
 part './ui/tc_time_marker.dart';
 part './ui/tc_column.dart';
 part './ui/tc_panel.dart';
+part './ui/tc_event_card.dart';
 part './core/extensions.dart';
+part './utils/utils.dart';

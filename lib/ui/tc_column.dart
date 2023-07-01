@@ -141,39 +141,10 @@ class _TCColumnState extends State<TCColumn> {
       left: 4 + (8 * overlapCount) as double,
       right: 10,
       height: itemHeight,
-      child: Container(
-        decoration: BoxDecoration(
-          color: event.calendar.semanticColor.color.withOpacity(0.3),
-          border: Border(
-            bottom: BorderSide(
-              width: 1,
-              color: widget.configs.primaryColor,
-            ),
-          ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 2,
-              left: 7,
-              child: Text(
-                event.summary,
-                style: TextStyle(
-                  color: event.calendar.semanticColor.color,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              width: 4,
-              height: itemHeight,
-              child: Container(color: event.calendar.semanticColor.color),
-            ),
-          ],
-        ),
+      child: EventCard(
+        itemHeight: itemHeight,
+        event: event,
+        configs: widget.configs,
       ),
     );
   }

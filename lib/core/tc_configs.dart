@@ -43,6 +43,8 @@ class TCConfigs {
   final double fontSize;
   final String? fontFamily;
   final Color timeMarkerColor;
+  final int? defaultBlockNum;
+  final bool scrollToCurrentTime;
 
   const TCConfigs({
     required this.calendars,
@@ -54,6 +56,8 @@ class TCConfigs {
     required this.metaColor,
     required this.windowHeight,
     required this.windowWidth,
+    this.defaultBlockNum,
+    this.scrollToCurrentTime = false,
     this.fontSize = 11,
     this.fontFamily,
     Color? timeMarkerColor,

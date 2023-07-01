@@ -43,6 +43,7 @@ void main() {
     panelColor: Colors.pink,
     windowWidth: 1900,
     windowHeight: 1200,
+    scrollToCurrentTime: true,
   );
   runApp(
     App(
