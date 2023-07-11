@@ -4,8 +4,6 @@ part of turbocal;
 class TCInstance extends StatefulWidget {
   final GlobalKey globalKey = GlobalKey();
   final TCConfigs configs;
-  final LinkedScrollableControlPoint controlPoint =
-      LinkedScrollableControlPoint();
   final List<TCCalendar> calendars;
   final List<TCEvent> events = [];
   late DateTime dateNow = DateTime.now();
@@ -33,7 +31,7 @@ class TCInstance extends StatefulWidget {
 class _TCTInstanceState extends State<TCInstance> {
   void scrollCanvasToDefault() {
     // screen height - TCPanel height
-    final double canvasHeight = DimensionTools.getHeight(context) - 60;
+    final double canvasHeight = widget.configs.windowHeight - 80;
     final double maxOffset =
         24 * widget.configs.timescaleZoom.blockHeight - canvasHeight;
     final double defaultOffset;
@@ -48,8 +46,6 @@ class _TCTInstanceState extends State<TCInstance> {
         defaultOffset = 0;
       }
     }
-    widget.controlPoint
-        .update(defaultOffset > maxOffset ? maxOffset : defaultOffset);
   }
 
   @override
@@ -64,7 +60,6 @@ class _TCTInstanceState extends State<TCInstance> {
     final List<Widget> columns = [
       TCTimeMarkerColumn(
         configs: widget.configs,
-        controlPoint: widget.controlPoint,
       )
     ];
     // Add the required number of columns to the main view
@@ -76,14 +71,10 @@ class _TCTInstanceState extends State<TCInstance> {
         final DateTime colDateEnd = colDateStart.add(const Duration(hours: 24));
         final Iterable<TCEvent> events = widget.events.where((TCEvent e) =>
             e.dtStart.isAfter(colDateStart) && e.dtEnd.isBefore(colDateEnd));
-        return Expanded(
-          flex: 2,
-          child: TCColumn(
-            configs: widget.configs,
-            dateInfo: colDateStart,
-            controlPoint: widget.controlPoint,
-            eventsData: events,
-          ),
+        return TCColumn(
+          configs: widget.configs,
+          dateInfo: colDateStart,
+          eventsData: events,
         );
       },
     ));
@@ -102,14 +93,12 @@ class _TCTInstanceState extends State<TCInstance> {
                 TCPanel(
                   tcInstance: widget,
                   configs: widget.configs,
-                  controlPoint: widget.controlPoint,
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      children: columns,
-                    ),
+                SizedBox(
+                  width: widget.configs.windowWidth,
+                  height: widget.configs.windowHeight - 80,
+                  child: SingleChildScrollView(
+                    child: columns.first,
                   ),
                 ),
               ],

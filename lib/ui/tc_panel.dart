@@ -1,14 +1,12 @@
 part of turbocal;
 
 class TCPanel extends StatelessWidget {
-  final LinkedScrollableControlPoint controlPoint;
   final TCConfigs configs;
   final TCInstance tcInstance;
 
   TCPanel({
     required this.tcInstance,
     required this.configs,
-    required this.controlPoint,
     super.key,
   });
 

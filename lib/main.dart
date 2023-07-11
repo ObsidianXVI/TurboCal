@@ -41,22 +41,15 @@ void main() {
     secondaryColor: Colors.blueGrey,
     metaColor: Colors.black,
     panelColor: Colors.pink,
-    windowWidth: 1900,
+    windowWidth: 1450,
     windowHeight: 1200,
     scrollToCurrentTime: true,
   );
-  runApp(
-    App(
-      configs: tcConfigs,
-    ),
-  );
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  final TCConfigs configs;
-
-  App({
-    required this.configs,
+  const App({
     super.key,
   });
 
@@ -65,7 +58,18 @@ class App extends StatelessWidget {
     return MaterialApp(
       home: Center(
         child: TCInstance(
-          configs: configs,
+          configs: TCConfigs(
+            calendars: [testCal],
+            instanceView: TCInstanceView.week,
+            timescaleZoom: TCTimescaleZoom.x100,
+            primaryColor: Colors.white70,
+            secondaryColor: Colors.blueGrey,
+            metaColor: Colors.black,
+            panelColor: Colors.pink,
+            windowWidth: MediaQuery.of(context).size.width,
+            windowHeight: MediaQuery.of(context).size.height,
+            scrollToCurrentTime: true,
+          ),
           calendars: [testCal],
         ),
       ),

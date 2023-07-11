@@ -4,13 +4,11 @@ class TCColumn extends StatefulWidget {
   final TCConfigs configs;
   final DateTime dateInfo;
 
-  final LinkedScrollableControlPoint controlPoint;
   final Iterable<TCEvent> eventsData;
 
   const TCColumn({
     required this.configs,
     required this.dateInfo,
-    required this.controlPoint,
     required this.eventsData,
     super.key,
   });
@@ -22,13 +20,13 @@ class TCColumn extends StatefulWidget {
 class _TCColumnState extends State<TCColumn> {
   @override
   Widget build(BuildContext context) {
-    final double blockWidth =
-        widget.configs.windowWidth / widget.configs.instanceView.columnCount;
+    final double blockWidth = (widget.configs.windowWidth - 50) /
+        widget.configs.instanceView.columnCount;
     final List<Widget> colItems = [];
     colItems.addAll(List.generate(24, (int index) {
       return Center(
         child: Container(
-          width: double.infinity,
+          width: blockWidth,
           height: widget.configs.timescaleZoom.blockHeight,
           decoration: BoxDecoration(
             border: Border.all(
@@ -40,14 +38,13 @@ class _TCColumnState extends State<TCColumn> {
         ),
       );
     }));
-    return LinkedScrollable(
-      isLinked: true,
-      controlPoint: widget.controlPoint,
+    return SizedBox(
       height: widget.configs.windowHeight,
+      width: blockWidth,
       child: Column(
         children: [
           Container(
-            width: double.infinity,
+            width: blockWidth,
             height: 50,
             color: widget.configs.primaryColor,
             child: Row(
@@ -72,7 +69,9 @@ class _TCColumnState extends State<TCColumn> {
               ],
             ),
           ),
-          Expanded(
+          SizedBox(
+            height: widget.configs.timescaleZoom.blockHeight * 24,
+            width: blockWidth,
             child: Stack(
               children: [
                 Positioned(

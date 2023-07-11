@@ -2,10 +2,8 @@ part of turbocal;
 
 class TCTimeMarkerColumn extends StatefulWidget {
   final TCConfigs configs;
-  final LinkedScrollableControlPoint controlPoint;
   const TCTimeMarkerColumn({
     required this.configs,
-    required this.controlPoint,
     super.key,
   });
 
@@ -16,10 +14,9 @@ class TCTimeMarkerColumn extends StatefulWidget {
 class _TCTimeMarkerColumnState extends State<TCTimeMarkerColumn> {
   @override
   Widget build(BuildContext context) {
-    return LinkedScrollable(
+    return SizedBox(
       height: widget.configs.windowHeight,
-      isLinked: true,
-      controlPoint: widget.controlPoint,
+      width: 50,
       child: Column(
         children: List.generate(24, (int index) {
           final Text timeMarker = index == 0
