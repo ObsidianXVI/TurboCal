@@ -23,7 +23,7 @@ class _TCColumnState extends State<TCColumn> {
     final double blockWidth = (widget.configs.windowWidth - 50) /
         widget.configs.instanceView.columnCount;
     final List<Widget> colItems = [];
-    colItems.addAll(List.generate(23, (int index) {
+    colItems.addAll(List.generate(24, (int index) {
       return Center(
         child: Container(
           width: blockWidth,
@@ -38,57 +38,55 @@ class _TCColumnState extends State<TCColumn> {
         ),
       );
     }));
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            width: blockWidth,
-            height: 50,
-            color: widget.configs.primaryColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  widget.dateInfo.dayName.substring(0, 3).toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: widget.configs.metaColor,
-                  ),
+    return Column(
+      children: [
+        Container(
+          width: blockWidth,
+          height: 50,
+          color: widget.configs.primaryColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                widget.dateInfo.dayName.substring(0, 3).toUpperCase(),
+                style: TextStyle(
+                  fontSize: 24,
+                  color: widget.configs.metaColor,
                 ),
-                const SizedBox(width: 20),
-                Text(
-                  widget.dateInfo.day.toString().padLeft(2, '0'),
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: widget.configs.metaColor,
-                  ),
+              ),
+              const SizedBox(width: 20),
+              Text(
+                widget.dateInfo.day.toString().padLeft(2, '0'),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: widget.configs.metaColor,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: widget.configs.timescaleZoom.blockHeight * 23,
-            width: blockWidth,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: Container(
-                    width: blockWidth,
-                    height: widget.configs.timescaleZoom.blockHeight * 24,
-                    child: Column(
-                      children: colItems,
-                    ),
+        ),
+        SizedBox(
+          height: widget.configs.timescaleZoom.blockHeight * 24,
+          width: blockWidth,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                child: Container(
+                  width: blockWidth,
+                  height: widget.configs.timescaleZoom.blockHeight * 24,
+                  child: Column(
+                    children: colItems,
                   ),
                 ),
-                ...generateEventCanvas(widget.dateInfo, blockWidth),
-              ],
-            ),
+              ),
+              ...generateEventCanvas(widget.dateInfo, blockWidth),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

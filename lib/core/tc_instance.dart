@@ -56,14 +56,8 @@ class _TCTInstanceState extends State<TCInstance> {
 
   @override
   Widget build(BuildContext context) {
-    // Create the column of time markers
-    final List<Widget> columns = [
-      TCTimeMarkerColumn(
-        configs: widget.configs,
-      )
-    ];
-    // Add the required number of columns to the main view
-    columns.addAll(List<Widget>.generate(
+    // List of the columns to be displayed in the main view
+    final List<Widget> columns = List<Widget>.generate(
       widget.configs.instanceView.columnCount,
       (int index) {
         final DateTime colDateStart =
@@ -77,7 +71,7 @@ class _TCTInstanceState extends State<TCInstance> {
           eventsData: events,
         );
       },
-    ));
+    );
 
     return Material(
       child: Center(
@@ -97,9 +91,13 @@ class _TCTInstanceState extends State<TCInstance> {
                   height: widget.configs.windowHeight - 80,
                   child: SingleChildScrollView(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: columns,
+                      children: [
+                        TCTimeMarkerColumn(
+                          configs: widget.configs,
+                        ),
+                        const SizedBox(width: 5),
+                        ...columns,
+                      ],
                     ),
                   ),
                 ),

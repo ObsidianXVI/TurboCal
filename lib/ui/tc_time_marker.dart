@@ -14,38 +14,29 @@ class TCTimeMarkerColumn extends StatefulWidget {
 class _TCTimeMarkerColumnState extends State<TCTimeMarkerColumn> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: List.generate(24, (int index) {
-          final Text timeMarker = index == 0
-              ? const Text('')
-              : Text(
-                  "${index.toString().padLeft(2, '0')}:00",
-                  style: TextStyle(
-                    fontSize: widget.configs.fontSize,
-                    fontFamily: widget.configs.fontFamily,
-                    color: widget.configs.metaColor,
-                  ),
-                );
+    return Column(
+      children: [
+        SizedBox(height: widget.configs.timescaleZoom.blockHeight - 15),
+        ...List.generate(24, (int index) {
+          final Text timeMarker = Text(
+            "${index.toString().padLeft(2, '0')}:00",
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: widget.configs.fontSize,
+              fontFamily: widget.configs.fontFamily,
+              color: widget.configs.metaColor,
+            ),
+          );
           return Center(
             child: Container(
-              width: 50,
+              width: 45,
               height: widget.configs.timescaleZoom.blockHeight,
               color: widget.configs.primaryColor,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned(
-                    right: 5,
-                    top: -6,
-                    child: timeMarker,
-                  ),
-                ],
-              ),
+              child: timeMarker,
             ),
           );
         }),
-      ),
+      ],
     );
   }
 }
