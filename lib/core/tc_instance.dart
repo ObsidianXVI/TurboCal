@@ -88,17 +88,29 @@ class _TCTInstanceState extends State<TCInstance> {
           child: ScrollConfiguration(
             behavior:
                 ScrollConfiguration.of(context).copyWith(scrollbars: false),
-            child: Column(
+            child: Stack(
               children: [
-                TCPanel(
-                  tcInstance: widget,
-                  configs: widget.configs,
-                ),
-                SizedBox(
+                Positioned(
+                  top: 80,
+                  left: 0,
                   width: widget.configs.windowWidth,
-                  height: widget.configs.windowHeight - 80,
+                  height: widget.configs.windowHeight - 100,
                   child: SingleChildScrollView(
-                    child: columns.first,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: columns,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  height: 80,
+                  width: widget.configs.windowWidth,
+                  child: TCPanel(
+                    tcInstance: widget,
+                    configs: widget.configs,
                   ),
                 ),
               ],

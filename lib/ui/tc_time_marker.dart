@@ -14,9 +14,7 @@ class TCTimeMarkerColumn extends StatefulWidget {
 class _TCTimeMarkerColumnState extends State<TCTimeMarkerColumn> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.configs.windowHeight,
-      width: 50,
+    return Container(
       child: Column(
         children: List.generate(24, (int index) {
           final Text timeMarker = index == 0

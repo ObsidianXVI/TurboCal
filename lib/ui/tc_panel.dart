@@ -14,7 +14,7 @@ class TCPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: double.infinity,
+        width: configs.windowWidth,
         height: 80,
         color: configs.panelColor,
         child: Stack(

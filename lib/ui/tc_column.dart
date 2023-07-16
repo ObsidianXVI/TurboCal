@@ -23,7 +23,7 @@ class _TCColumnState extends State<TCColumn> {
     final double blockWidth = (widget.configs.windowWidth - 50) /
         widget.configs.instanceView.columnCount;
     final List<Widget> colItems = [];
-    colItems.addAll(List.generate(24, (int index) {
+    colItems.addAll(List.generate(23, (int index) {
       return Center(
         child: Container(
           width: blockWidth,
@@ -38,9 +38,7 @@ class _TCColumnState extends State<TCColumn> {
         ),
       );
     }));
-    return SizedBox(
-      height: widget.configs.windowHeight,
-      width: blockWidth,
+    return Container(
       child: Column(
         children: [
           Container(
