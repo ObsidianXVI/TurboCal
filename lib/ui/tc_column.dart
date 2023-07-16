@@ -68,7 +68,7 @@ class _TCColumnState extends State<TCColumn> {
             ),
           ),
           SizedBox(
-            height: widget.configs.timescaleZoom.blockHeight * 24,
+            height: widget.configs.timescaleZoom.blockHeight * 23,
             width: blockWidth,
             child: Stack(
               children: [

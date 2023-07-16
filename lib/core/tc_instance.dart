@@ -94,7 +94,7 @@ class _TCTInstanceState extends State<TCInstance> {
                   top: 80,
                   left: 0,
                   width: widget.configs.windowWidth,
-                  height: widget.configs.windowHeight - 100,
+                  height: widget.configs.windowHeight - 80,
                   child: SingleChildScrollView(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
