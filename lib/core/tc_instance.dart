@@ -2,14 +2,13 @@ part of turbocal;
 
 //DateTime.now().hour - 1
 class TCInstance extends StatefulWidget {
-  final GlobalKey globalKey = GlobalKey();
+  final GlobalKey<State<TCInstance>> globalKey = GlobalKey();
   final TCConfigs configs;
   final List<TCCalendar> calendars;
   final List<TCEvent> events = [];
   late DateTime dateNow = DateTime.now();
   DateTime scopeStartDate = DateTime.now();
   int dayOfWeek = 0;
-  State? controller;
 
   TCInstance({
     required this.configs,
@@ -25,15 +24,13 @@ class TCInstance extends StatefulWidget {
   }
 
   @override
-  State<TCInstance> createState() => controller = _TCTInstanceState();
+  State<TCInstance> createState() => _TCTInstanceState();
 }
 
 class _TCTInstanceState extends State<TCInstance> {
+  final ScrollController scrollController = ScrollController();
+
   void scrollCanvasToDefault() {
-    // screen height - TCPanel height
-    final double canvasHeight = widget.configs.windowHeight - 80;
-    final double maxOffset =
-        24 * widget.configs.timescaleZoom.blockHeight - canvasHeight;
     final double defaultOffset;
     if (widget.configs.defaultBlockNum != null) {
       defaultOffset = widget.configs.defaultBlockNum! *
@@ -46,6 +43,7 @@ class _TCTInstanceState extends State<TCInstance> {
         defaultOffset = 0;
       }
     }
+    scrollController.jumpTo(defaultOffset);
   }
 
   @override
@@ -90,6 +88,7 @@ class _TCTInstanceState extends State<TCInstance> {
                   width: widget.configs.windowWidth,
                   height: widget.configs.windowHeight - 80,
                   child: SingleChildScrollView(
+                    controller: scrollController,
                     child: Row(
                       children: [
                         TCTimeMarkerColumn(

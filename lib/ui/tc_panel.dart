@@ -24,8 +24,11 @@ class TCPanel extends StatelessWidget {
               bottom: 10,
               child: IconButton(
                 onPressed: () {
-                  /* tcInstance.scopeStartDate.subtract(const Duration(days: 7));
-                  tcInstance.controller!.setState(() {}); */
+                  // NO, don't try to do this. Instead, explore [InheritedWidget](https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html)
+/*                   tcInstance.globalKey.currentState!.setState(() {
+                    tcInstance.scopeStartDate.subtract(const Duration(days: 7));
+                    print('done');
+                  }); */
                 },
                 icon: const Icon(
                   Icons.chevron_left,
