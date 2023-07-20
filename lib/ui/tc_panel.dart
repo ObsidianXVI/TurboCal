@@ -29,6 +29,11 @@ class TCPanel extends StatelessWidget {
                     tcInstance.scopeStartDate.subtract(const Duration(days: 7));
                     print('done');
                   }); */
+                  ScopeStartDateChangeNotification(
+                    newScopeStartDate: tcInstance.scopeStartDate.subtract(
+                      const Duration(days: 7),
+                    ),
+                  ).dispatch(context);
                 },
                 icon: const Icon(
                   Icons.chevron_left,
@@ -40,4 +45,11 @@ class TCPanel extends StatelessWidget {
       ),
     );
   }
+}
+
+class ScopeStartDateChangeNotification extends Notification {
+  final DateTime newScopeStartDate;
+  const ScopeStartDateChangeNotification({
+    required this.newScopeStartDate,
+  });
 }

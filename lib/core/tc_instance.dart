@@ -2,7 +2,6 @@ part of turbocal;
 
 //DateTime.now().hour - 1
 class TCInstance extends StatefulWidget {
-  final GlobalKey<State<TCInstance>> globalKey = GlobalKey();
   final TCConfigs configs;
   final List<TCCalendar> calendars;
   final List<TCEvent> events = [];
@@ -80,37 +79,45 @@ class _TCTInstanceState extends State<TCInstance> {
           child: ScrollConfiguration(
             behavior:
                 ScrollConfiguration.of(context).copyWith(scrollbars: false),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 80,
-                  left: 0,
-                  width: widget.configs.windowWidth,
-                  height: widget.configs.windowHeight - 80,
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    child: Row(
-                      children: [
-                        TCTimeMarkerColumn(
-                          configs: widget.configs,
-                        ),
-                        const SizedBox(width: 5),
-                        ...columns,
-                      ],
+            child: NotificationListener<ScopeStartDateChangeNotification>(
+              onNotification: (notification) {
+                setState(() {
+                  widget.scopeStartDate = notification.newScopeStartDate;
+                });
+                return true;
+              },
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 80,
+                    left: 0,
+                    width: widget.configs.windowWidth,
+                    height: widget.configs.windowHeight - 80,
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: Row(
+                        children: [
+                          TCTimeMarkerColumn(
+                            configs: widget.configs,
+                          ),
+                          const SizedBox(width: 5),
+                          ...columns,
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  height: 80,
-                  width: widget.configs.windowWidth,
-                  child: TCPanel(
-                    tcInstance: widget,
-                    configs: widget.configs,
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    height: 80,
+                    width: widget.configs.windowWidth,
+                    child: TCPanel(
+                      tcInstance: widget,
+                      configs: widget.configs,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
