@@ -24,14 +24,10 @@ class TCPanel extends StatelessWidget {
               bottom: 10,
               child: IconButton(
                 onPressed: () {
-                  TurbocalNotification(
-                    notifications: [
-                      ScopeStartDateChangeNotification(
-                        newScopeStartDate: tcInstance.scopeStartDate.subtract(
-                          const Duration(days: 7),
-                        ),
-                      ),
-                    ],
+                  ScopeStartDateChangeNotification(
+                    newScopeStartDate: tcInstance.scopeStartDate.subtract(
+                      const Duration(days: 7),
+                    ),
                   ).dispatch(context);
                 },
                 icon: const Icon(

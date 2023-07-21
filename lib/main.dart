@@ -38,8 +38,12 @@ void main() {
     ),
     TCEvent(
       summary: "event3",
-      dtStart: now.subtract(const Duration(hours: 1)),
-      dtEnd: now.add(const Duration(minutes: 90)),
+      dtStart: now
+          .subtract(const Duration(hours: 1))
+          .subtract(const Duration(days: 3)),
+      dtEnd: now
+          .add(const Duration(minutes: 90))
+          .subtract(const Duration(days: 3)),
       uid: "07ua4sgq0sk1ubb9qs1kji9oau@google.com",
       created: DateTime.parse("20230511T091320Z"),
       lastModified: DateTime.parse("20230511T091320Z"),
@@ -54,7 +58,7 @@ void main() {
     calendars: [testCal],
     instanceView: TCInstanceView.week,
     timescaleZoom: TCTimescaleZoom.x100,
-    primaryColor: Colors.white70,
+    primaryColor: Colors.white,
     secondaryColor: Colors.blueGrey,
     metaColor: Colors.black,
     panelColor: Colors.pink,

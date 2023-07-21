@@ -20,9 +20,9 @@ class EventCardState extends State<EventCard> {
   bool active = false;
   List<BoxShadow> boxShadows = [
     BoxShadow(
-      color: Colors.black.withOpacity(0.1),
+      color: Colors.black.withOpacity(0.3),
       spreadRadius: 2,
-      blurRadius: 3,
+      blurRadius: 12,
     ),
   ];
 
@@ -30,8 +30,17 @@ class EventCardState extends State<EventCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        active = !active;
-        setState(() {});
+        setState(() {
+          active = !active;
+          if (active) {
+            EventCardPressedNotification(
+              eventData: widget.event,
+              renderBox: context.findRenderObject() as RenderBox,
+            ).dispatch(context);
+          } else {
+            const EventCardDismissedNotification().dispatch(context);
+          }
+        });
       },
       child: Container(
         decoration: BoxDecoration(
