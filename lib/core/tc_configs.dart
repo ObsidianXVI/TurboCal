@@ -65,11 +65,13 @@ class TCConfigs {
 }
 
 class TCCalendar {
-  final TCSemanticColor semanticColor;
+  final TCSemanticColor primaryColor;
+  final TCSemanticColor accentColor;
   final List<TCEvent> events = [];
 
   TCCalendar({
-    required this.semanticColor,
+    required this.primaryColor,
+    required this.accentColor,
   });
 }
 

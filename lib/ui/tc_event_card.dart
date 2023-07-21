@@ -35,13 +35,11 @@ class EventCardState extends State<EventCard> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: widget.event.calendar.semanticColor.color.withOpacity(0.3),
+          color: widget.event.calendar.primaryColor.color,
           boxShadow: active ? boxShadows : null,
-          border: Border(
-            bottom: BorderSide(
-              width: 1,
-              color: widget.configs.primaryColor,
-            ),
+          border: Border.all(
+            width: 1,
+            color: widget.event.calendar.accentColor.color,
           ),
         ),
         child: Stack(
@@ -52,19 +50,11 @@ class EventCardState extends State<EventCard> {
               child: Text(
                 widget.event.summary,
                 style: TextStyle(
-                  color: widget.event.calendar.semanticColor.color,
+                  color: widget.event.calendar.accentColor.color,
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
               ),
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              width: 4,
-              height: widget.itemHeight,
-              child:
-                  Container(color: widget.event.calendar.semanticColor.color),
             ),
           ],
         ),

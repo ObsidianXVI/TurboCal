@@ -1,15 +1,19 @@
 import './turbocal.dart';
 import 'package:flutter/material.dart';
 
-final TCCalendar testCal =
-    TCCalendar(semanticColor: const TCSemanticColor(color: Colors.blue));
+final TCCalendar testCal = TCCalendar(
+  primaryColor: TCSemanticColor(color: Colors.lightBlue.shade300),
+  accentColor: const TCSemanticColor(color: Colors.white),
+);
+const Duration offsetTime = Duration(minutes: 390);
 
 void main() {
+  final DateTime now = DateTime.now().add(offsetTime);
   testCal.events.addAll([
     TCEvent(
       summary: "event1",
-      dtStart: DateTime.parse("20230626T104500Z"),
-      dtEnd: DateTime.parse("20230626T114500Z"),
+      dtStart: now.subtract(const Duration(hours: 1)),
+      dtEnd: now.add(const Duration(minutes: 90)),
       uid: "07ua4sgq0sk1ubb9qs1kji9oau@google.com",
       created: DateTime.parse("20230511T091320Z"),
       lastModified: DateTime.parse("20230511T091320Z"),
@@ -21,8 +25,21 @@ void main() {
     ),
     TCEvent(
       summary: "event2",
-      dtStart: DateTime.parse("20230716T113000Z"),
-      dtEnd: DateTime.parse("202300716T124500Z"),
+      dtStart: now.subtract(const Duration(hours: 1)),
+      dtEnd: now.add(const Duration(minutes: 90)),
+      uid: "07ua4sgq0sk1ubb9qs1kji9oau@google.com",
+      created: DateTime.parse("20230511T091320Z"),
+      lastModified: DateTime.parse("20230511T091320Z"),
+      sequence: 0,
+      status: TCEventStatus.confirmed,
+      transp: TCEventTransp.opaque,
+      dtStamp: DateTime.parse("20230511T091500Z"),
+      calendar: testCal,
+    ),
+    TCEvent(
+      summary: "event3",
+      dtStart: now.subtract(const Duration(hours: 1)),
+      dtEnd: now.add(const Duration(minutes: 90)),
       uid: "07ua4sgq0sk1ubb9qs1kji9oau@google.com",
       created: DateTime.parse("20230511T091320Z"),
       lastModified: DateTime.parse("20230511T091320Z"),

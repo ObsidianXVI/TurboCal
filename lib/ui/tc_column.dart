@@ -105,10 +105,11 @@ class _TCColumnState extends State<TCColumn> {
     final double itemHeight =
         ((event.dtEnd.difference(event.dtStart).inMinutes) / 60) *
             widget.configs.timescaleZoom.blockHeight;
+    print(overlapCount);
     return Positioned(
       top: (event.dtEnd.difference(currentDay).inMinutes / 60) *
           widget.configs.timescaleZoom.blockHeight,
-      left: 4 + (8 * overlapCount) as double,
+      left: 4 + overlapCount * 50,
       right: 10,
       height: itemHeight,
       child: EventCard(
