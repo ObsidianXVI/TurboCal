@@ -65,22 +65,55 @@ class _TCTInstanceState extends State<TCInstance> {
 
   @override
   Widget build(BuildContext context) {
+    final double blockWidth = (widget.configs.windowWidth - 50) /
+        widget.configs.instanceView.columnCount;
     // List of the columns to be displayed in the main view
-    final List<Widget> columns = List<Widget>.generate(
-      widget.configs.instanceView.columnCount,
-      (int index) {
-        final DateTime colDateStart =
-            widget.scopeStartDate.add(Duration(days: index));
-        final DateTime colDateEnd = colDateStart.add(const Duration(hours: 24));
-        final Iterable<TCEvent> events = widget.events.where((TCEvent e) =>
-            e.dtStart.isAfter(colDateStart) && e.dtEnd.isBefore(colDateEnd));
-        return TCColumn(
+    final List<Widget> columns = [];
+    // List of the day and date labels for each column
+    final List<Widget> colLabels = [];
+    for (int i = 0; i < widget.configs.instanceView.columnCount; i++) {
+      final DateTime colDateStart =
+          widget.scopeStartDate.add(Duration(days: i));
+      final DateTime colDateEnd = colDateStart.add(const Duration(hours: 24));
+
+      final Widget colLabel = Container(
+        width: blockWidth,
+        height: 50,
+        color: widget.configs.primaryColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              colDateStart.dayName.substring(0, 3).toUpperCase(),
+              style: TextStyle(
+                fontSize: 24,
+                color: widget.configs.metaColor,
+              ),
+            ),
+            const SizedBox(width: 20),
+            Text(
+              colDateStart.day.toString().padLeft(2, '0'),
+              style: TextStyle(
+                fontSize: 18,
+                color: widget.configs.metaColor,
+              ),
+            ),
+          ],
+        ),
+      );
+
+      final Iterable<TCEvent> events = widget.events.where((TCEvent e) =>
+          e.dtStart.isAfter(colDateStart) && e.dtEnd.isBefore(colDateEnd));
+      columns.add(
+        TCColumn(
           configs: widget.configs,
           dateInfo: colDateStart,
           eventsData: events,
-        );
-      },
-    );
+        ),
+      );
+      colLabels.add(colLabel);
+    }
 
     return Material(
       child: Center(
@@ -98,7 +131,7 @@ class _TCTInstanceState extends State<TCInstance> {
               child: Stack(
                 children: [
                   Positioned(
-                    top: 80,
+                    top: 110,
                     left: 0,
                     width: widget.configs.windowWidth,
                     height: widget.configs.windowHeight - 80,
@@ -111,6 +144,30 @@ class _TCTInstanceState extends State<TCInstance> {
                           ),
                           const SizedBox(width: 5),
                           ...columns,
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 80,
+                    left: 0,
+                    height: 50,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            offset: const Offset(0, 0),
+                            blurRadius: 10,
+                          )
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const SizedBox(width: 45),
+                          ...colLabels,
                         ],
                       ),
                     ),

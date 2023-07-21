@@ -40,32 +40,6 @@ class _TCColumnState extends State<TCColumn> {
     }));
     return Column(
       children: [
-        Container(
-          width: blockWidth,
-          height: 50,
-          color: widget.configs.primaryColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                widget.dateInfo.dayName.substring(0, 3).toUpperCase(),
-                style: TextStyle(
-                  fontSize: 24,
-                  color: widget.configs.metaColor,
-                ),
-              ),
-              const SizedBox(width: 20),
-              Text(
-                widget.dateInfo.day.toString().padLeft(2, '0'),
-                style: TextStyle(
-                  fontSize: 18,
-                  color: widget.configs.metaColor,
-                ),
-              ),
-            ],
-          ),
-        ),
         SizedBox(
           height: widget.configs.timescaleZoom.blockHeight * 24,
           width: blockWidth,
