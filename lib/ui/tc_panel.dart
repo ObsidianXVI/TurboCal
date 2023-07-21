@@ -20,7 +20,7 @@ class TCPanel extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              right: 10,
+              right: 40,
               bottom: 10,
               child: IconButton(
                 onPressed: () {
@@ -32,6 +32,22 @@ class TCPanel extends StatelessWidget {
                 },
                 icon: const Icon(
                   Icons.chevron_left,
+                ),
+              ),
+            ),
+            Positioned(
+              right: 10,
+              bottom: 10,
+              child: IconButton(
+                onPressed: () {
+                  ScopeStartDateChangeNotification(
+                    newScopeStartDate: tcInstance.scopeStartDate.add(
+                      const Duration(days: 7),
+                    ),
+                  ).dispatch(context);
+                },
+                icon: const Icon(
+                  Icons.chevron_right,
                 ),
               ),
             ),
