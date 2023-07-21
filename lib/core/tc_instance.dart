@@ -28,6 +28,7 @@ class TCInstance extends StatefulWidget {
 
 class _TCTInstanceState extends State<TCInstance> {
   final ScrollController scrollController = ScrollController();
+  late ScopeStartDateChangeChannel scopeStartDateChangeChannel;
 
   void scrollCanvasToDefault() {
     final double defaultOffset;
@@ -49,6 +50,17 @@ class _TCTInstanceState extends State<TCInstance> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, scrollCanvasToDefault);
+
+    scopeStartDateChangeChannel = ScopeStartDateChangeChannel(
+      handlers: [
+        (Notification notif) {
+          notif as ScopeStartDateChangeNotification;
+          setState(() {
+            widget.scopeStartDate = notif.newScopeStartDate;
+          });
+        },
+      ],
+    );
   }
 
   @override
@@ -79,13 +91,10 @@ class _TCTInstanceState extends State<TCInstance> {
           child: ScrollConfiguration(
             behavior:
                 ScrollConfiguration.of(context).copyWith(scrollbars: false),
-            child: NotificationListener<ScopeStartDateChangeNotification>(
-              onNotification: (notification) {
-                setState(() {
-                  widget.scopeStartDate = notification.newScopeStartDate;
-                });
-                return true;
-              },
+            child: NotificationManager(
+              channels: [
+                scopeStartDateChangeChannel,
+              ],
               child: Stack(
                 children: [
                   Positioned(

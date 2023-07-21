@@ -24,15 +24,14 @@ class TCPanel extends StatelessWidget {
               bottom: 10,
               child: IconButton(
                 onPressed: () {
-                  // NO, don't try to do this. Instead, explore [InheritedWidget](https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html)
-/*                   tcInstance.globalKey.currentState!.setState(() {
-                    tcInstance.scopeStartDate.subtract(const Duration(days: 7));
-                    print('done');
-                  }); */
-                  ScopeStartDateChangeNotification(
-                    newScopeStartDate: tcInstance.scopeStartDate.subtract(
-                      const Duration(days: 7),
-                    ),
+                  TurbocalNotification(
+                    notifications: [
+                      ScopeStartDateChangeNotification(
+                        newScopeStartDate: tcInstance.scopeStartDate.subtract(
+                          const Duration(days: 7),
+                        ),
+                      ),
+                    ],
                   ).dispatch(context);
                 },
                 icon: const Icon(
@@ -45,11 +44,4 @@ class TCPanel extends StatelessWidget {
       ),
     );
   }
-}
-
-class ScopeStartDateChangeNotification extends Notification {
-  final DateTime newScopeStartDate;
-  const ScopeStartDateChangeNotification({
-    required this.newScopeStartDate,
-  });
 }
