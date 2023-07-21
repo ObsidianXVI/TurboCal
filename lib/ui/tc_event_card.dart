@@ -28,45 +28,58 @@ class EventCardState extends State<EventCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          active = !active;
-          if (active) {
-            EventCardPressedNotification(
-              eventData: widget.event,
-              renderBox: context.findRenderObject() as RenderBox,
-            ).dispatch(context);
-          } else {
-            const EventCardDismissedNotification().dispatch(context);
-          }
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: widget.event.calendar.primaryColor.color,
-          boxShadow: active ? boxShadows : null,
-          border: Border.all(
-            width: 1,
-            color: widget.event.calendar.accentColor.color,
-          ),
+    final Widget card = Container(
+      decoration: BoxDecoration(
+        color: widget.event.calendar.primaryColor.color,
+        boxShadow: active ? boxShadows : null,
+        border: Border.all(
+          width: 1,
+          color: widget.event.calendar.accentColor.color,
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 2,
-              left: 7,
-              child: Text(
-                widget.event.summary,
-                style: TextStyle(
-                  color: widget.event.calendar.accentColor.color,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 2,
+            left: 7,
+            child: Text(
+              widget.event.summary,
+              style: TextStyle(
+                color: widget.event.calendar.accentColor.color,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+    return Draggable<EventCard>(
+      data: widget,
+      feedback: Container(
+        width: 40,
+        height: 40,
+        color: Colors.red,
+      ),
+      childWhenDragging: Container(
+        color: widget.event.calendar.primaryColor.color.withOpacity(0.2),
+        child: card,
+      ),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            active = !active;
+            if (active) {
+              EventCardPressedNotification(
+                eventData: widget.event,
+                renderBox: context.findRenderObject() as RenderBox,
+              ).dispatch(context);
+            } else {
+              const EventCardDismissedNotification().dispatch(context);
+            }
+          });
+        },
+        child: card,
       ),
     );
   }

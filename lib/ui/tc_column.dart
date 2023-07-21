@@ -38,30 +38,35 @@ class _TCColumnState extends State<TCColumn> {
         ),
       );
     }));
-    return Column(
-      children: [
-        SizedBox(height: widget.configs.timescaleZoom.blockHeight),
-        SizedBox(
-          height: widget.configs.timescaleZoom.blockHeight * 24,
-          width: blockWidth,
-          child: Stack(
-            children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Container(
-                  width: blockWidth,
-                  height: widget.configs.timescaleZoom.blockHeight * 24,
-                  child: Column(
-                    children: colItems,
+    return DragTarget<EventCard>(
+      builder: (BuildContext context, candidateData, rejectedData) {
+        return Column(
+          children: [
+            SizedBox(height: widget.configs.timescaleZoom.blockHeight),
+            SizedBox(
+              height: widget.configs.timescaleZoom.blockHeight * 24,
+              width: blockWidth,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      width: blockWidth,
+                      height: widget.configs.timescaleZoom.blockHeight * 24,
+                      child: Column(
+                        children: colItems,
+                      ),
+                    ),
                   ),
-                ),
+                  ...generateEventCanvas(widget.dateInfo, blockWidth),
+                  if (candidateData.isNotEmpty) candidateData.first!,
+                ],
               ),
-              ...generateEventCanvas(widget.dateInfo, blockWidth),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 
