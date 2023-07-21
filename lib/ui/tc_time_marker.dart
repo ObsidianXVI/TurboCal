@@ -16,7 +16,7 @@ class _TCTimeMarkerColumnState extends State<TCTimeMarkerColumn> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: widget.configs.timescaleZoom.blockHeight - 15),
+        SizedBox(height: widget.configs.timescaleZoom.blockHeight),
         ...List.generate(24, (int index) {
           final Text timeMarker = Text(
             "${index.toString().padLeft(2, '0')}:00",
@@ -32,7 +32,10 @@ class _TCTimeMarkerColumnState extends State<TCTimeMarkerColumn> {
               width: 45,
               height: widget.configs.timescaleZoom.blockHeight,
               color: widget.configs.primaryColor,
-              child: timeMarker,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: timeMarker,
+              ),
             ),
           );
         }),

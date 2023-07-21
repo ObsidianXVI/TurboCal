@@ -131,7 +131,7 @@ class _TCTInstanceState extends State<TCInstance> {
               child: Stack(
                 children: [
                   Positioned(
-                    top: 110,
+                    top: 80,
                     left: 0,
                     width: widget.configs.windowWidth,
                     height: widget.configs.windowHeight - 80,
@@ -157,7 +157,7 @@ class _TCTInstanceState extends State<TCInstance> {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withOpacity(0.3),
                             offset: const Offset(0, 0),
                             blurRadius: 10,
                           )
