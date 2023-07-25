@@ -4,11 +4,13 @@ class EventCard extends StatefulWidget {
   final TCEvent event;
   final TCConfigs configs;
   final double itemHeight;
+  final double maxWidth;
 
   const EventCard({
     required this.event,
     required this.configs,
     required this.itemHeight,
+    required this.maxWidth,
     super.key,
   });
 
@@ -56,10 +58,10 @@ class EventCardState extends State<EventCard> {
     );
     return Draggable<EventCard>(
       data: widget,
-      feedback: Container(
-        width: 40,
-        height: 40,
-        color: Colors.red,
+      feedback: SizedBox(
+        height: widget.itemHeight,
+        width: widget.maxWidth,
+        child: card,
       ),
       childWhenDragging: Container(
         color: widget.event.calendar.primaryColor.color.withOpacity(0.2),

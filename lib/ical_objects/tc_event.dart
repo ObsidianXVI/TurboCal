@@ -35,6 +35,25 @@ class TCEvent {
     this.alarms = const [],
   });
 
+  TCEvent.cloneFrom(
+    TCEvent other, {
+    bool updateMeta = true,
+  })  : summary = other.summary,
+        dtStart = other.dtStart,
+        dtEnd = other.dtEnd,
+        uid = other.uid,
+        created = other.created,
+        lastModified = DateTime.now(),
+        sequence = other.sequence,
+        status = other.status,
+        transp = other.transp,
+        dtStamp = other.dtStamp,
+        calendar = other.calendar,
+        description = other.description,
+        location = other.location,
+        repeatRule = other.repeatRule,
+        alarms = other.alarms;
+
   bool shouldRenderFor(DateTime currentDate) {
     return !(currentDate.isBefore(dtStart) || currentDate.isAfter(dtEnd));
   }

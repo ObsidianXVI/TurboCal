@@ -60,7 +60,11 @@ class _TCColumnState extends State<TCColumn> {
                     ),
                   ),
                   ...generateEventCanvas(widget.dateInfo, blockWidth),
-                  if (candidateData.isNotEmpty) candidateData.first!,
+                  if (candidateData.isNotEmpty)
+                    showUpdatedEvent(
+                      oldCard: candidateData.first!,
+                      oldEvent: candidateData.first!.event,
+                    ),
                 ],
               ),
             ),
@@ -83,8 +87,10 @@ class _TCColumnState extends State<TCColumn> {
               widget.configs.timescaleZoom.blockHeight;
       canvasElements.add(
         Positioned(
-          top: (event.dtEnd.difference(currentDay).inMinutes / 60) *
-              widget.configs.timescaleZoom.blockHeight,
+          top: computeHeightFromTop(
+            currentDay: currentDay,
+            event: event,
+          ),
           left: 4,
           right: 10,
           height: itemHeight,
@@ -92,10 +98,47 @@ class _TCColumnState extends State<TCColumn> {
             itemHeight: itemHeight,
             event: event,
             configs: widget.configs,
+            maxWidth: blockWidth - 4 - 10,
           ),
         ),
       );
     }
     return canvasElements;
+  }
+
+  double computeHeightFromTop({
+    required TCEvent event,
+    required DateTime currentDay,
+  }) {
+    return (event.dtEnd.difference(currentDay).inMinutes / 60) *
+        widget.configs.timescaleZoom.blockHeight;
+  }
+
+  Widget showUpdatedEvent({
+    required EventCard oldCard,
+    required TCEvent oldEvent,
+  }) {
+    final TCEvent updatedEvent = TCEvent.cloneFrom(oldEvent)
+      ..dtStart.add(
+        widget.dateInfo.difference(oldEvent.dtStart),
+      );
+    return Positioned(
+      top: computeHeightFromTop(
+        event: updatedEvent,
+        currentDay: widget.dateInfo,
+      ),
+      left: 4,
+      right: 10,
+      child: SizedBox(
+        height: oldCard.itemHeight,
+        width: oldCard.maxWidth,
+        child: EventCard(
+          event: updatedEvent,
+          configs: widget.configs,
+          itemHeight: oldCard.itemHeight,
+          maxWidth: oldCard.maxWidth,
+        ),
+      ),
+    );
   }
 }
