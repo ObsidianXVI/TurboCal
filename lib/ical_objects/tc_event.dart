@@ -37,22 +37,39 @@ class TCEvent {
 
   TCEvent.cloneFrom(
     TCEvent other, {
+    String? summary,
+    TCDescription? description,
+    TCLocation? location,
+    DateTime? dtStart,
+    DateTime? dtEnd,
+    DateTime? dtStamp,
+    String? uid,
+    DateTime? created,
+    DateTime? lastModified,
+    int? sequence,
+    TCEventStatus? status,
+    TCEventTransp? transp,
+    TCRepeatRule? repeatRule,
+    List<TCAlarm>? alarms,
+    TCCalendar? calendar,
     bool updateMeta = true,
-  })  : summary = other.summary,
-        dtStart = other.dtStart,
-        dtEnd = other.dtEnd,
-        uid = other.uid,
-        created = other.created,
-        lastModified = DateTime.now(),
-        sequence = other.sequence,
-        status = other.status,
-        transp = other.transp,
-        dtStamp = other.dtStamp,
-        calendar = other.calendar,
-        description = other.description,
-        location = other.location,
-        repeatRule = other.repeatRule,
-        alarms = other.alarms;
+  })  : summary = summary ?? other.summary,
+        dtStart = dtStart ?? other.dtStart,
+        dtEnd = dtEnd ?? other.dtEnd,
+        uid = uid ?? other.uid,
+        created = created ?? other.created,
+        lastModified = lastModified ?? DateTime.now(),
+        sequence = sequence ?? other.sequence,
+        status = status ?? other.status,
+        transp = transp ?? other.transp,
+        dtStamp = dtStamp ?? other.dtStamp,
+        calendar = calendar ?? other.calendar,
+        description = description ?? other.description,
+        location = location ?? other.location,
+        repeatRule = repeatRule ?? other.repeatRule,
+        alarms = alarms ?? other.alarms;
+
+  Duration get durationSpan => dtEnd.difference(dtStart);
 
   bool shouldRenderFor(DateTime currentDate) {
     return !(currentDate.isBefore(dtStart) || currentDate.isAfter(dtEnd));

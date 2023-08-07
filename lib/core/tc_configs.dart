@@ -45,8 +45,9 @@ class TCConfigs {
   final Color timeMarkerColor;
   final int? defaultBlockNum;
   final bool scrollToCurrentTime;
+  final TCSynchroniser synchroniser;
 
-  const TCConfigs({
+  TCConfigs({
     required this.calendars,
     required this.instanceView,
     required this.timescaleZoom,
@@ -61,7 +62,10 @@ class TCConfigs {
     this.fontSize = 11,
     this.fontFamily,
     Color? timeMarkerColor,
-  }) : timeMarkerColor = timeMarkerColor ?? secondaryColor;
+  })  : timeMarkerColor = timeMarkerColor ?? secondaryColor,
+        synchroniser = TCSynchroniser(
+          events: [for (TCCalendar cal in calendars) ...cal.events],
+        );
 }
 
 class TCCalendar {
@@ -81,4 +85,14 @@ class TCSemanticColor {
   const TCSemanticColor({
     required this.color,
   });
+}
+
+class TCSynchroniser {
+  final Map<String, TCEvent> repository;
+
+  TCSynchroniser({
+    required List<TCEvent> events,
+  }) : repository = {for (TCEvent event in events) event.uid: event};
+
+  void update(TCEvent newData) => repository[newData.uid] = newData;
 }

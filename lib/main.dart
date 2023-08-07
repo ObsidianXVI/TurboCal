@@ -8,32 +8,32 @@ final TCCalendar testCal = TCCalendar(
 const Duration offsetTime = Duration(minutes: 390);
 
 void main() {
-  final DateTime now = DateTime.now().add(offsetTime);
+  final DateTime now = utcDate(DateTime.now().add(offsetTime));
   testCal.events.addAll([
     TCEvent(
       summary: "event1",
       dtStart: now.subtract(const Duration(hours: 1)),
       dtEnd: now.add(const Duration(minutes: 90)),
-      uid: "07ua4sgq0sk1ubb9qs1kji9oau@google.com",
-      created: DateTime.parse("20230511T091320Z"),
-      lastModified: DateTime.parse("20230511T091320Z"),
+      uid: "abc1",
+      created: utcDate(DateTime.parse("20230511T091320Z")),
+      lastModified: utcDate(DateTime.parse("20230511T091320Z")),
       sequence: 0,
       status: TCEventStatus.confirmed,
       transp: TCEventTransp.opaque,
-      dtStamp: DateTime.parse("20230511T091500Z"),
+      dtStamp: utcDate(DateTime.parse("20230511T091500Z")),
       calendar: testCal,
     ),
     TCEvent(
       summary: "event2",
       dtStart: now.subtract(const Duration(hours: 1)),
       dtEnd: now.add(const Duration(minutes: 90)),
-      uid: "07ua4sgq0sk1ubb9qs1kji9oau@google.com",
-      created: DateTime.parse("20230511T091320Z"),
-      lastModified: DateTime.parse("20230511T091320Z"),
+      uid: "abc2",
+      created: utcDate(DateTime.parse("20230511T091320Z")),
+      lastModified: utcDate(DateTime.parse("20230511T091320Z")),
       sequence: 0,
       status: TCEventStatus.confirmed,
       transp: TCEventTransp.opaque,
-      dtStamp: DateTime.parse("20230511T091500Z"),
+      dtStamp: utcDate(DateTime.parse("20230511T091500Z")),
       calendar: testCal,
     ),
     TCEvent(
@@ -44,7 +44,36 @@ void main() {
       dtEnd: now
           .add(const Duration(minutes: 90))
           .subtract(const Duration(days: 3)),
-      uid: "07ua4sgq0sk1ubb9qs1kji9oau@google.com",
+      uid: "abc3",
+      created: DateTime.parse("20230511T091320Z"),
+      lastModified: DateTime.parse("20230511T091320Z"),
+      sequence: 0,
+      status: TCEventStatus.confirmed,
+      transp: TCEventTransp.opaque,
+      dtStamp: DateTime.parse("20230511T091500Z"),
+      calendar: testCal,
+    ),
+    TCEvent(
+      summary: "event4",
+      dtStart:
+          now.add(const Duration(days: 1)).subtract(const Duration(hours: 1)),
+      dtEnd: now.add(const Duration(days: 1)),
+      uid: "abc4",
+      created: DateTime.parse("20230511T091320Z"),
+      lastModified: DateTime.parse("20230511T091320Z"),
+      sequence: 0,
+      status: TCEventStatus.confirmed,
+      transp: TCEventTransp.opaque,
+      dtStamp: DateTime.parse("20230511T091500Z"),
+      calendar: testCal,
+    ),
+    TCEvent(
+      summary: "event5",
+      dtStart: now
+          .subtract(const Duration(days: 5))
+          .subtract(const Duration(hours: 1)),
+      dtEnd: now.subtract(const Duration(days: 5)),
+      uid: "abc5",
       created: DateTime.parse("20230511T091320Z"),
       lastModified: DateTime.parse("20230511T091320Z"),
       sequence: 0,
@@ -91,7 +120,6 @@ class App extends StatelessWidget {
             windowHeight: MediaQuery.of(context).size.height,
             scrollToCurrentTime: true,
           ),
-          calendars: [testCal],
         ),
       ),
     );

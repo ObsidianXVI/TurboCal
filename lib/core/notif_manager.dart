@@ -20,3 +20,7 @@ class EventCardPressedNotification extends Notification {
 class EventCardDismissedNotification extends Notification {
   const EventCardDismissedNotification();
 }
+
+class EventDataModifiedNotification extends Notification {
+  const EventDataModifiedNotification();
+}

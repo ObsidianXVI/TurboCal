@@ -3,13 +3,14 @@ part of turbocal;
 class TCColumn extends StatefulWidget {
   final TCConfigs configs;
   final DateTime dateInfo;
-
   final Iterable<TCEvent> eventsData;
+  final ScrollController masterScrollController;
 
   const TCColumn({
     required this.configs,
     required this.dateInfo,
     required this.eventsData,
+    required this.masterScrollController,
     super.key,
   });
 
@@ -18,6 +19,10 @@ class TCColumn extends StatefulWidget {
 }
 
 class _TCColumnState extends State<TCColumn> {
+  Widget? anticiaptionCard;
+  EventCard? oldEventCard;
+  TCEvent? newEventData;
+
   @override
   Widget build(BuildContext context) {
     final double blockWidth = (widget.configs.windowWidth - 50) /
@@ -39,6 +44,56 @@ class _TCColumnState extends State<TCColumn> {
       );
     }));
     return DragTarget<EventCard>(
+      onWillAccept: (_) => true,
+      onAccept: (EventCard eventCard) {
+/*         anticiaptionCard = null;
+        print('accepted');
+        final TCEvent updatedEvent = TCEvent(
+          summary: eventCard.event.summary,
+          dtStart:
+              eventCard.event.dtStart.changeDayTo(widget.dateInfo.startOfDay),
+          dtEnd: eventCard.event.dtEnd,
+          uid: eventCard.event.uid,
+          created: eventCard.event.created,
+          lastModified: eventCard.event.lastModified,
+          sequence: eventCard.event.sequence,
+          status: eventCard.event.status,
+          transp: eventCard.event.transp,
+          dtStamp: eventCard.event.dtStamp,
+          calendar: eventCard.event.calendar,
+        );
+        widget.configs.synchroniser.update(updatedEvent);
+        print("Updated dtStart: ${updatedEvent.dtStart}");
+        const EventDataModifiedNotification().dispatch(context); */
+      },
+      onLeave: (_) {
+        oldEventCard = null;
+        newEventData = null;
+      },
+      onMove: (DragTargetDetails<EventCard> details) {
+        final TCEvent oldEvent = details.data.event;
+        final double heightFromTopOfCanvas =
+            widget.masterScrollController.offset +
+                details.offset.dy -
+                tcPanelHeight -
+                widget.configs.timescaleZoom.blockHeight;
+        final DateTime newDtStart = widget.dateInfo.add(
+          Duration(
+            minutes: computeMinutesFromTop(
+              heightFromTop: heightFromTopOfCanvas,
+              roundTo: 15,
+            ).toInt(),
+          ),
+        );
+        print(newDtStart);
+        oldEventCard = details.data;
+        newEventData = TCEvent.cloneFrom(
+          oldEvent,
+          dtStart: newDtStart,
+          dtEnd: newDtStart.add(oldEvent.durationSpan),
+          updateMeta: false,
+        );
+      },
       builder: (BuildContext context, candidateData, rejectedData) {
         return Column(
           children: [
@@ -59,12 +114,14 @@ class _TCColumnState extends State<TCColumn> {
                       ),
                     ),
                   ),
-                  ...generateEventCanvas(widget.dateInfo, blockWidth),
-                  if (candidateData.isNotEmpty)
-                    showUpdatedEvent(
-                      oldCard: candidateData.first!,
-                      oldEvent: candidateData.first!.event,
-                    ),
+                  ...generateEventCanvas(
+                    widget.dateInfo,
+                    blockWidth,
+                    [
+                      if (candidateData.isNotEmpty) newEventData!,
+                      ...widget.eventsData.toList(),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -74,9 +131,13 @@ class _TCColumnState extends State<TCColumn> {
     );
   }
 
-  List<Widget> generateEventCanvas(DateTime currentDay, double blockWidth) {
+  List<Widget> generateEventCanvas(
+    DateTime currentDay,
+    double blockWidth,
+    List<TCEvent> events,
+  ) {
     final List<Widget> canvasElements = [];
-    final List<TCEvent> remEvents = widget.eventsData.toList()
+    final List<TCEvent> remEvents = events
       ..sort((TCEvent event1, TCEvent event2) {
         return event1.dtStart.compareTo(event2.dtStart);
       });
@@ -114,6 +175,15 @@ class _TCColumnState extends State<TCColumn> {
         widget.configs.timescaleZoom.blockHeight;
   }
 
+  double computeMinutesFromTop({
+    required double heightFromTop,
+    int? roundTo = 15,
+  }) {
+    final double height =
+        (heightFromTop / widget.configs.timescaleZoom.blockHeight);
+    return (roundTo != null ? height.roundToNearestStep(roundTo) : height) * 60;
+  }
+
   Widget showUpdatedEvent({
     required EventCard oldCard,
     required TCEvent oldEvent,
@@ -124,9 +194,10 @@ class _TCColumnState extends State<TCColumn> {
       );
     return Positioned(
       top: computeHeightFromTop(
-        event: updatedEvent,
-        currentDay: widget.dateInfo,
-      ),
+            event: updatedEvent,
+            currentDay: updatedEvent.dtStart.startOfDay,
+          ) +
+          313,
       left: 4,
       right: 10,
       child: SizedBox(

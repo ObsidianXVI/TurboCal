@@ -1,5 +1,7 @@
 part of turbocal;
 
+const double tcPanelHeight = 80;
+
 class TCPanel extends StatelessWidget {
   final TCConfigs configs;
   final TCInstance tcInstance;
@@ -15,7 +17,7 @@ class TCPanel extends StatelessWidget {
     return Center(
       child: Container(
         width: configs.windowWidth,
-        height: 80,
+        height: tcPanelHeight,
         color: configs.panelColor,
         child: Stack(
           children: [

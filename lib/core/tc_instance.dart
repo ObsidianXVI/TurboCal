@@ -3,27 +3,22 @@ part of turbocal;
 //DateTime.now().hour - 1
 class TCInstance extends StatefulWidget {
   final TCConfigs configs;
-  final List<TCCalendar> calendars;
-  final List<TCEvent> events = [];
-  late DateTime dateNow = DateTime.now();
-  DateTime scopeStartDate = DateTime.now();
+  late final DateTime dateNow = utcDate(DateTime.now());
+  DateTime scopeStartDate = utcDate(DateTime.now()).startOfDay;
   int dayOfWeek = 0;
 
   TCInstance({
     required this.configs,
-    required this.calendars,
     super.key,
   }) {
-    for (TCCalendar cal in calendars) {
-      events.addAll(cal.events);
-    }
     dayOfWeek = dateNow.weekday;
-    scopeStartDate = DateTime.utc(dateNow.year, dateNow.month, dateNow.day)
-        .subtract(Duration(days: dayOfWeek - 1));
+    scopeStartDate = dateNow.subtract(Duration(days: dayOfWeek - 1));
   }
 
   @override
   State<TCInstance> createState() => _TCTInstanceState();
+
+  Iterable<TCEvent> get events => configs.synchroniser.repository.values;
 }
 
 class _TCTInstanceState extends State<TCInstance> {
@@ -37,7 +32,7 @@ class _TCTInstanceState extends State<TCInstance> {
           widget.configs.timescaleZoom.blockHeight;
     } else {
       if (widget.configs.scrollToCurrentTime) {
-        defaultOffset = (DateTime.now().hour - 1) *
+        defaultOffset = (utcDate(DateTime.now()).hour - 1) *
             widget.configs.timescaleZoom.blockHeight;
       } else {
         defaultOffset = 0;
@@ -99,6 +94,7 @@ class _TCTInstanceState extends State<TCInstance> {
           configs: widget.configs,
           dateInfo: colDateStart,
           eventsData: events,
+          masterScrollController: scrollController,
         ),
       );
       colLabels.add(colLabel);
@@ -131,6 +127,8 @@ class _TCTInstanceState extends State<TCInstance> {
                   setState(() {
                     eventPreviewOverlay = null;
                   });
+                } else if (notif is EventDataModifiedNotification) {
+                  setState(() {});
                 }
                 return true;
               },
