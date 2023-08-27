@@ -109,6 +109,7 @@ class EventCardState extends State<EventCard> {
         /*  print(details.localPosition);
         print(details.globalPosition); */
       },
+      onDragStarted: () => print("DS: s${widget.event.dtStart}"),
       childWhenDragging: EventCard.outlined(
         event: widget.event,
         configs: widget.configs,

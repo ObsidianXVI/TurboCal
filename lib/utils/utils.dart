@@ -38,7 +38,8 @@ extension DateTimeUtils on DateTime {
     }
   }
 
-  DateTime get startOfDay => DateTime.utc(year, month, day);
+  DateTime get startOfDay =>
+      DateTime(year, month, day).localisedTime(offsetTime);
 
   DateTime changeDayTo(DateTime targetDay) {
     final dayOfThis = startOfDay;
@@ -55,6 +56,8 @@ extension DateTimeUtils on DateTime {
       return subtract(difference(targetDay));
     }
   }
+
+  DateTime localisedTime(Duration offsetTime) => toUtc().add(offsetTime);
 }
 
 extension DoubleUtils on double {

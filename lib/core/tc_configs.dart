@@ -25,6 +25,10 @@ enum TCTimescaleZoom {
   x150(90),
   x200(120);
 
+  /// [blockHeight] defines how tall 60 minutes should be.
+  /// For example, [x150] means that 90px will be used for a 60 minute block.
+  /// To calculate the height, H, of an event D minutes long, use:
+  ///   H = (D / 60) * [blockHeight]
   final double blockHeight;
 
   const TCTimescaleZoom(this.blockHeight);

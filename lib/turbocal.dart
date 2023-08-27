@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:turbocal/main.dart';
 
 part 'core/tc_configs.dart';
 part './ical_objects/tc_description.dart';

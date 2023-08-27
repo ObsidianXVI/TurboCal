@@ -22,11 +22,11 @@
             "flutterMode": "release"
         },
         {
-            "name": "TurboCal Test (latest)",
+            "name": "Turbocal Debug",
             "request": "launch",
             "type": "dart",
-            "program": "dart",
-            "args": ["run", "../test/turbocal_test.dart"]
-        }
+            "program": "lib/main.dart",
+            "deviceId": "chrome",
+        },
     ]
 }

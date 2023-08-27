@@ -72,7 +72,7 @@ class TCEvent {
   Duration get durationSpan => dtEnd.difference(dtStart);
 
   bool shouldRenderFor(DateTime currentDate) {
-    return !(currentDate.isBefore(dtStart) || currentDate.isAfter(dtEnd));
+    return (dtStart.day == currentDate.day && dtEnd.day == currentDate.day);
   }
 
   bool overlapsWith(TCEvent other) {

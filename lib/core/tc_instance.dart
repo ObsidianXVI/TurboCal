@@ -3,8 +3,8 @@ part of turbocal;
 //DateTime.now().hour - 1
 class TCInstance extends StatefulWidget {
   final TCConfigs configs;
-  late final DateTime dateNow = utcDate(DateTime.now());
-  DateTime scopeStartDate = utcDate(DateTime.now()).startOfDay;
+  late final DateTime dateNow = DateTime.now().localisedTime(offsetTime);
+  late DateTime scopeStartDate;
   int dayOfWeek = 0;
 
   TCInstance({
@@ -12,7 +12,7 @@ class TCInstance extends StatefulWidget {
     super.key,
   }) {
     dayOfWeek = dateNow.weekday;
-    scopeStartDate = dateNow.subtract(Duration(days: dayOfWeek - 1));
+    scopeStartDate = dateNow.subtract(Duration(days: dayOfWeek - 1)).startOfDay;
   }
 
   @override
@@ -32,7 +32,7 @@ class _TCTInstanceState extends State<TCInstance> {
           widget.configs.timescaleZoom.blockHeight;
     } else {
       if (widget.configs.scrollToCurrentTime) {
-        defaultOffset = (utcDate(DateTime.now()).hour - 1) *
+        defaultOffset = (DateTime.now().localisedTime(offsetTime).hour - 1) *
             widget.configs.timescaleZoom.blockHeight;
       } else {
         defaultOffset = 0;
@@ -87,8 +87,8 @@ class _TCTInstanceState extends State<TCInstance> {
         ),
       );
 
-      final Iterable<TCEvent> events = widget.events.where((TCEvent e) =>
-          e.dtStart.isAfter(colDateStart) && e.dtEnd.isBefore(colDateEnd));
+      final Iterable<TCEvent> events =
+          widget.events.where((TCEvent e) => e.shouldRenderFor(colDateStart));
       columns.add(
         TCColumn(
           configs: widget.configs,

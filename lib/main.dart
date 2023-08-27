@@ -5,12 +5,26 @@ final TCCalendar testCal = TCCalendar(
   primaryColor: TCSemanticColor(color: Colors.lightBlue.shade300),
   accentColor: const TCSemanticColor(color: Colors.white),
 );
-const Duration offsetTime = Duration(minutes: 390);
+const Duration offsetTime = Duration(hours: 8);
 
 void main() {
-  final DateTime now = utcDate(DateTime.now().add(offsetTime));
+  final DateTime now = DateTime.now().localisedTime(offsetTime);
+
   testCal.events.addAll([
     TCEvent(
+      summary: "First Event",
+      dtStart: now,
+      dtEnd: now.add(const Duration(minutes: 90)),
+      uid: "abc1",
+      created: utcDate(DateTime.parse("20230511T091320Z")),
+      lastModified: utcDate(DateTime.parse("20230511T091320Z")),
+      sequence: 0,
+      status: TCEventStatus.confirmed,
+      transp: TCEventTransp.opaque,
+      dtStamp: utcDate(DateTime.parse("20230511T091500Z")),
+      calendar: testCal,
+    ),
+/*     TCEvent(
       summary: "event1",
       dtStart: now.subtract(const Duration(hours: 1)),
       dtEnd: now.add(const Duration(minutes: 90)),
@@ -82,6 +96,7 @@ void main() {
       dtStamp: DateTime.parse("20230511T091500Z"),
       calendar: testCal,
     ),
+   */
   ]);
   TCConfigs tcConfigs = TCConfigs(
     calendars: [testCal],

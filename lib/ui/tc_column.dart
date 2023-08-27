@@ -85,7 +85,7 @@ class _TCColumnState extends State<TCColumn> {
             ).toInt(),
           ),
         );
-        print(newDtStart);
+        // print(newDtStart);
         oldEventCard = details.data;
         newEventData = TCEvent.cloneFrom(
           oldEvent,
@@ -144,7 +144,7 @@ class _TCColumnState extends State<TCColumn> {
 
     for (TCEvent event in remEvents) {
       final double itemHeight =
-          ((event.dtEnd.difference(event.dtStart).inMinutes) / 60) *
+          (event.dtEnd.difference(event.dtStart).inMinutes / 60) *
               widget.configs.timescaleZoom.blockHeight;
       canvasElements.add(
         Positioned(
@@ -171,7 +171,7 @@ class _TCColumnState extends State<TCColumn> {
     required TCEvent event,
     required DateTime currentDay,
   }) {
-    return (event.dtEnd.difference(currentDay).inMinutes / 60) *
+    return ((event.dtStart.difference(currentDay).inMinutes) / 60) *
         widget.configs.timescaleZoom.blockHeight;
   }
 
