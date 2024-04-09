@@ -1,6 +1,5 @@
 part of turbocal;
 
-
 class TCConfigs {
   final TCInstanceView instanceView;
   final TCTimescaleZoom timescaleZoom;
@@ -10,6 +9,7 @@ class TCConfigs {
   final Color panelColor;
   final double windowWidth;
   final double windowHeight;
+  final DateTime? mainViewDateScopeStart;
 
   final TCWidgetBuilder<String>? eventTitleBuilder;
   final TCWidgetBuilder<String>? timeMarkerBuilder;
@@ -25,6 +25,7 @@ class TCConfigs {
     required this.metaColor,
     required this.windowHeight,
     required this.windowWidth,
+    this.mainViewDateScopeStart,
     this.eventTitleBuilder,
     this.timeMarkerBuilder,
     this.scrollToCurrentTime = false,
@@ -35,13 +36,14 @@ enum TCInstanceView {
   // day,
 
   // fourDay,
-  week(7);
+  week(7, 7);
   // month,
   // schedule,
 
   final int columnCount;
+  final int dayCount;
 
-  const TCInstanceView(this.columnCount);
+  const TCInstanceView(this.columnCount, this.dayCount);
 }
 
 enum TCTimescaleZoom {
