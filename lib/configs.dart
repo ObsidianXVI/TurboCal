@@ -1,10 +1,12 @@
 part of turbocal;
 
-const int defaultFixedEventCanvasIndent = 4;
+const int defaultFixedEventCanvasIndent = 12;
 const int indentSize = 2;
 const double timeMarkerColumnWidth = 36;
 const double weekDayLabelsRowHeight = 40;
 const double panelHeight = 80;
+const double eventTitlePadding = 4;
+const double eventCardBorderWidth = 2;
 
 class TCConfigs {
   final TCInstanceView instanceView;
