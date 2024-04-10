@@ -46,19 +46,19 @@ class TCInstanceState extends State<TCInstance> {
         }
       }
     });
-    buildInstanceView();
-    buildMainView();
+    computeInstanceView();
+    computeMainView();
     super.initState();
   }
 
-  void buildInstanceView() {
+  void computeInstanceView() {
     columnCount = widget.configs.instanceView.columnCount;
     blockWidth =
         (widget.configs.windowWidth - timeMarkerColumnWidth) / columnCount;
     blockHeight = widget.configs.timescaleZoom.blockHeight;
   }
 
-  void buildMainView() {
+  void computeMainView() {
     final DateTime dtNow = now();
     final DateTime nowDay = DateTime(dtNow.year, dtNow.month, dtNow.day);
     mainViewDateScopeStart = widget.configs.mainViewDateScopeStart ??
@@ -110,7 +110,7 @@ class TCInstanceState extends State<TCInstance> {
           child: Padding(
             padding: const EdgeInsets.only(right: 4),
             child: Align(
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.topRight,
               child: Text(
                 '${i.toDoubleDigitZeroPadded()}:00',
                 style: const TextStyle(fontSize: 12),
@@ -132,7 +132,7 @@ class TCInstanceState extends State<TCInstance> {
       for (final d in dayLabels)
         SizedBox(
           width: blockWidth,
-          height: 40,
+          height: weekDayLabelsRowHeight,
           child: Center(
             child: Text(d),
           ),
@@ -144,9 +144,10 @@ class TCInstanceState extends State<TCInstance> {
     return Stack(
       children: [
         Positioned(
-          top: 120,
+          top: weekDayLabelsRowHeight + panelHeight,
           width: widget.configs.windowWidth,
-          height: widget.configs.windowHeight,
+          height: widget.configs.windowHeight -
+              (weekDayLabelsRowHeight + panelHeight),
           child: ScrollConfiguration(
             behavior:
                 ScrollConfiguration.of(context).copyWith(scrollbars: false),
@@ -154,17 +155,19 @@ class TCInstanceState extends State<TCInstance> {
               controller: mainViewScrollController,
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Row(children: [
-                  buildTimeMarkers(),
-                  ...buildTCColumnsForWeek(),
-                ]),
+                child: Row(
+                  children: [
+                    buildTimeMarkers(),
+                    ...buildTCColumnsForWeek(),
+                  ],
+                ),
               ),
             ),
           ),
         ),
         Positioned(
-          top: 80,
-          height: 40,
+          top: panelHeight,
+          height: weekDayLabelsRowHeight,
           width: widget.configs.windowWidth,
           child: Container(
             clipBehavior: Clip.none,
@@ -188,10 +191,10 @@ class TCInstanceState extends State<TCInstance> {
         ),
         Positioned(
           width: widget.configs.windowWidth,
-          height: 80,
+          height: panelHeight,
           child: Container(
             width: widget.configs.windowWidth,
-            height: 80,
+            height: panelHeight,
             color: widget.configs.panelColor,
           ),
         ),

@@ -3,6 +3,8 @@ part of turbocal;
 const int defaultFixedEventCanvasIndent = 4;
 const int indentSize = 2;
 const double timeMarkerColumnWidth = 36;
+const double weekDayLabelsRowHeight = 40;
+const double panelHeight = 80;
 
 class TCConfigs {
   final TCInstanceView instanceView;
