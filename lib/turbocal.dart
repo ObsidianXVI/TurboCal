@@ -53,7 +53,8 @@ class TCInstanceState extends State<TCInstance> {
 
   void buildInstanceView() {
     columnCount = widget.configs.instanceView.columnCount;
-    blockWidth = widget.configs.windowWidth / columnCount;
+    blockWidth =
+        (widget.configs.windowWidth - timeMarkerColumnWidth) / columnCount;
     blockHeight = widget.configs.timescaleZoom.blockHeight;
   }
 
@@ -82,6 +83,7 @@ class TCInstanceState extends State<TCInstance> {
           mainViewDateScopeStart.add(Duration(days: i));
       cols.add(
         TCColumn(
+          dayStamp: colDateStart,
           configs: widget.configs,
           blockWidth: blockWidth,
           blockHeight: blockHeight,
@@ -98,10 +100,31 @@ class TCInstanceState extends State<TCInstance> {
     return cols;
   }
 
-  List<Widget> buildTimeMarkers() {
+  Widget buildTimeMarkers() {
     final List<Widget> timeMarkers = [];
-
-    return timeMarkers;
+    for (int i = 0; i < 24; i++) {
+      timeMarkers.add(
+        SizedBox(
+          width: timeMarkerColumnWidth,
+          height: widget.configs.timescaleZoom.blockHeight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                '${i.toDoubleDigitZeroPadded()}:00',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return SizedBox(
+      width: timeMarkerColumnWidth,
+      height: widget.configs.timescaleZoom.blockHeight * 24,
+      child: Column(children: timeMarkers),
+    );
   }
 
   List<Widget> buildWeekDayLabels() {
@@ -131,7 +154,10 @@ class TCInstanceState extends State<TCInstance> {
               controller: mainViewScrollController,
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Row(children: buildTCColumnsForWeek()),
+                child: Row(children: [
+                  buildTimeMarkers(),
+                  ...buildTCColumnsForWeek(),
+                ]),
               ),
             ),
           ),
@@ -154,7 +180,10 @@ class TCInstanceState extends State<TCInstance> {
                       ),
                     ],
                   ),
-            child: Row(children: buildWeekDayLabels()),
+            child: Row(children: [
+              const SizedBox(width: timeMarkerColumnWidth),
+              ...buildWeekDayLabels()
+            ]),
           ),
         ),
         Positioned(
@@ -193,12 +222,14 @@ class TCColumn extends StatefulWidget {
   final double blockHeight;
   final List<TCEvent> events;
   final TCConfigs configs;
+  final DateTime dayStamp;
 
   const TCColumn({
     required this.configs,
     required this.blockWidth,
     required this.blockHeight,
     required this.events,
+    required this.dayStamp,
     super.key,
   });
 
@@ -232,16 +263,174 @@ class TCColumnState extends State<TCColumn> {
       child: Stack(
         children: [
           Column(children: timeMarkerBlocks),
-          TCEventCanvas(),
+          TCEventCanvas(
+            dayStamp: widget.dayStamp,
+            events: widget.events,
+            configs: widget.configs,
+            maxWidth: widget.blockWidth - defaultFixedEventCanvasIndent,
+          ),
         ],
       ),
     );
   }
 }
 
-class TCEventCanvas extends StatelessWidget {
+class TCEventCanvas extends StatefulWidget {
+  final DateTime dayStamp;
+  final double maxWidth;
+  final TCConfigs configs;
+  final List<TCEvent> events;
+
+  const TCEventCanvas({
+    required this.maxWidth,
+    required this.configs,
+    required this.events,
+    required this.dayStamp,
+    super.key,
+  });
+
+  @override
+  State<StatefulWidget> createState() => TCEventCanvasState();
+}
+
+class TCEventCanvasState extends State<TCEventCanvas> {
+  final List<TCEvent> sortedEvents = [];
+
+  void init() {
+    if (widget.events.isEmpty) return;
+    if (widget.events.length == 1) {
+      sortedEvents.add(widget.events[0]);
+    } else {
+      sortedEvents
+        ..addAll(widget.events)
+        ..sort((a, b) => b.dtStart.compareTo(a.dtStart));
+    }
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  void resetState() {
+    sortedEvents.clear();
+  }
+
+  List<List<TCRenderData>> resolveCollisions() {
+    final List<List<TCRenderData>> layers = [];
+    int layer = 0;
+    DateTime prevDt;
+    while (sortedEvents.isNotEmpty) {
+      final TCEvent ev = sortedEvents.first;
+      layers.add([
+        TCRenderData(
+          width: widget.maxWidth,
+          height: widget.configs.timescaleZoom
+              .minutesToHeight(ev.durationSpan.inMinutes),
+          offset: widget.configs.timescaleZoom.minutesToHeight(
+            ev.dtStart.difference(widget.dayStamp).inMinutes,
+          ),
+          event: ev,
+        )
+      ]);
+
+      prevDt = ev.dtStart;
+      sortedEvents.removeAt(0);
+      if (sortedEvents.isNotEmpty) {
+        for (int i = 0; i < sortedEvents.length; i++) {
+          final TCEvent ev = sortedEvents[i];
+          if (!ev.dtStart.isAfter(
+              prevDt.add(widget.configs.timescaleZoom.heightToMinutes(20)))) {
+            continue;
+          } else {
+            layers[layer].add(
+              TCRenderData(
+                width: widget.maxWidth - (indentSize * layer),
+                event: ev,
+                height: widget.configs.timescaleZoom
+                    .minutesToHeight(ev.durationSpan.inMinutes),
+                offset: widget.configs.timescaleZoom.minutesToHeight(
+                  ev.dtStart.difference(widget.dayStamp).inMinutes,
+                ),
+              ),
+            );
+          }
+        }
+        layer += 1;
+      } else {
+        return layers;
+      }
+    }
+    return layers;
+  }
+
+  List<TCRenderData> flattenLayers(List<List<TCRenderData>> layers) {
+    final List<TCRenderData> flattened = [];
+    for (int i = 0; i < layers.length; i++) {
+      for (int j = 0; j < layers[i].length; j++) {
+        flattened.add(layers[i][j]);
+      }
+    }
+    return flattened;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox();
+    return SizedBox(
+      width: widget.maxWidth,
+      height: widget.configs.timescaleZoom.blockHeight * 24,
+      child: Stack(
+        children: [
+          for (final e in flattenLayers(resolveCollisions()))
+            Positioned(
+              top: e.offset,
+              right: 0,
+              width: e.width,
+              height: e.height,
+              child: Container(
+                width: e.width,
+                height: e.height,
+                color: Colors.red,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(e.event.summary),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
+
+class TCRenderData {
+  final TCEvent event;
+  final double width;
+  final double height;
+  final double offset;
+
+  const TCRenderData({
+    required this.width,
+    required this.height,
+    required this.offset,
+    required this.event,
+  });
+}
+
+
+
+/* class CollisionGroup {
+  final List<TCEvent> events = [];
+  DateTime start;
+  DateTime end;
+
+  CollisionGroup({
+    required this.start,
+    required this.end,
+  });
+
+  void addEvent(TCEvent event) {
+
+  }
+} */

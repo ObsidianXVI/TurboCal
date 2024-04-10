@@ -34,3 +34,7 @@ extension DateTimeUtils on DateTime {
     }
   }
 }
+
+extension NumUtils on num {
+  String toDoubleDigitZeroPadded() => toString().padLeft(2, '0');
+}

@@ -1,5 +1,9 @@
 part of turbocal;
 
+const int defaultFixedEventCanvasIndent = 4;
+const int indentSize = 2;
+const double timeMarkerColumnWidth = 36;
+
 class TCConfigs {
   final TCInstanceView instanceView;
   final TCTimescaleZoom timescaleZoom;
@@ -59,7 +63,13 @@ enum TCTimescaleZoom {
   /// For example, [x150] means that 90px will be used for a 60 minute block.
   /// To calculate the height, H, of an event D minutes long, use:
   ///   H = (D / 60) * [blockHeight]
+  /// Conversely, the duration of an event can be calculated from its height on canvas:
+  ///   D = (H * 60) / [blockHeight]
   final double blockHeight;
 
   const TCTimescaleZoom(this.blockHeight);
+
+  double minutesToHeight(int minutes) => (minutes / 60) * blockHeight;
+  Duration heightToMinutes(double height) =>
+      Duration(minutes: ((height * 60) / blockHeight).ceil());
 }
