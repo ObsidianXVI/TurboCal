@@ -10,6 +10,25 @@ const List<String> dayLabels = [
   'Sun'
 ];
 
+enum MonthLabels {
+  january('Jan', 'January'),
+  february('Feb', 'February'),
+  march('Mar', 'March'),
+  april('Apr', 'April'),
+  may('May', 'May'),
+  june('Jun', 'June'),
+  july('Jul', 'July'),
+  august('Aug', 'August'),
+  september('Sept', 'September'),
+  october('Oct', 'October'),
+  november('Nov', 'November'),
+  december('Dec', 'December');
+
+  final String shortName;
+  final String longName;
+  const MonthLabels(this.shortName, this.longName);
+}
+
 DateTime now() => DateTime.now().toUtc();
 
 extension DateTimeUtils on DateTime {

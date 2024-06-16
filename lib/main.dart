@@ -9,12 +9,12 @@ void main() {
       events: [
         TCEvent(
           summary: "First Event",
-          dtStart: DateTime(2024, 4, 9, 17, 30).toUtc(),
-          dtEnd: DateTime(2024, 4, 9, 17, 30)
+          dtStart: DateTime(2024, 6, 11, 17, 30).toUtc(),
+          dtEnd: DateTime(2024, 6, 11, 17, 30)
               .toUtc()
               .add(const Duration(minutes: 90)),
           uid: "abc1",
-          created: DateTime(2024, 4, 9, 17, 0).toUtc(),
+          created: DateTime(2024, 6, 12, 17, 0).toUtc(),
           lastModified: now(),
           sequence: 0,
           status: TCEventStatus.confirmed,

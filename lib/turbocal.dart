@@ -1,6 +1,7 @@
 library turbocal;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 part './tc_instance.dart';
 part './tc_column.dart';
 part './tc_event_canvas.dart';

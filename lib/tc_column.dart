@@ -1,5 +1,21 @@
 part of turbocal;
 
+class TCColumnKey extends LocalKey {
+  final double blockWidth;
+  final double blockHeight;
+  final List<TCEvent> events;
+  final TCConfigs configs;
+  final DateTime dayStamp;
+
+  const TCColumnKey({
+    required this.configs,
+    required this.blockWidth,
+    required this.blockHeight,
+    required this.events,
+    required this.dayStamp,
+  });
+}
+
 class TCColumn extends StatefulWidget {
   final double blockWidth;
   final double blockHeight;
@@ -7,14 +23,21 @@ class TCColumn extends StatefulWidget {
   final TCConfigs configs;
   final DateTime dayStamp;
 
-  const TCColumn({
+  TCColumn({
     required this.configs,
     required this.blockWidth,
     required this.blockHeight,
     required this.events,
     required this.dayStamp,
-    super.key,
-  });
+  }) : super(
+          key: TCColumnKey(
+            configs: configs,
+            blockWidth: blockWidth,
+            blockHeight: blockHeight,
+            events: events,
+            dayStamp: dayStamp,
+          ),
+        );
 
   @override
   State<TCColumn> createState() => TCColumnState();
