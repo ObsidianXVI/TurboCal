@@ -18,9 +18,13 @@ class TCEventCanvas extends StatefulWidget {
   State<StatefulWidget> createState() => TCEventCanvasState();
 }
 
+typedef RenderPriorityUpdateCallback = void Function(TCEventCard);
+
 class TCEventCanvasState extends State<TCEventCanvas> {
   final List<TCEvent> sortedEvents = [];
   final List<TCRenderData> flattenedLayers = [];
+  final FocusNode focusNode = FocusNode();
+  TCEventCard? prioritisedCard;
 
   void init() {
     if (widget.events.isEmpty) return;
@@ -103,6 +107,40 @@ class TCEventCanvasState extends State<TCEventCanvas> {
     return flattened;
   }
 
+  void requestRenderPriorityForEventCard(TCEventCard ec) {
+    setState(() {
+      print('granting');
+      prioritisedCard = TCEventCard(
+        eventCanvas: this,
+        hasRenderPriority: true,
+        timescaleZoom: widget.configs.timescaleZoom,
+        renderData: TCRenderData(
+          width: widget.maxWidth,
+          height: ec.renderData.height,
+          offset: ec.renderData.offset,
+          event: ec.renderData.event,
+        ),
+      );
+    });
+  }
+
+  void revokeRenderPriorityForEventCard() {
+    setState(() {
+      print('revoking');
+      prioritisedCard = null;
+    });
+  }
+
+  Widget renderCard(TCEventCard eventCard, [bool hasPriority = false]) {
+    return Positioned(
+      top: eventCard.renderData.offset,
+      right: 0,
+      width: eventCard.renderData.width,
+      height: eventCard.renderData.height,
+      child: eventCard,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -110,14 +148,34 @@ class TCEventCanvasState extends State<TCEventCanvas> {
       height: widget.configs.timescaleZoom.blockHeight * 24,
       child: Stack(
         children: [
-          for (final e in flattenedLayers)
-            Positioned(
-              top: e.offset,
-              right: 0,
-              width: e.width,
-              height: e.height,
-              child: TCEventCard(renderData: e),
+          Positioned.fill(
+            child: GestureDetector(
+              onTapUp: (_) => setState(() => prioritisedCard = null),
+              child: KeyboardListener(
+                autofocus: true,
+                focusNode: focusNode,
+                onKeyEvent: (event) {
+                  if (event is KeyUpEvent &&
+                      event.logicalKey == LogicalKeyboardKey.escape) {
+                    setState(() => prioritisedCard = null);
+                  }
+                },
+                child: SizedBox(
+                  width: widget.maxWidth,
+                  height: widget.configs.timescaleZoom.blockHeight * 24,
+                ),
+              ),
             ),
+          ),
+          for (final e in flattenedLayers)
+            renderCard(
+              TCEventCard(
+                renderData: e,
+                eventCanvas: this,
+                timescaleZoom: widget.configs.timescaleZoom,
+              ),
+            ),
+          if (prioritisedCard != null) renderCard(prioritisedCard!, true),
         ],
       ),
     );

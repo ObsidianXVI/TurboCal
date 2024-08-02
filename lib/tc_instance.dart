@@ -1,14 +1,17 @@
 part of turbocal;
 
+final GlobalKey instanceKey = GlobalKey<TCInstanceState>();
+
 class TCInstance extends StatefulWidget {
-  final List<TCEvent> events;
+  final Map<String, TCEvent> eventsRegistry = {};
   final TCConfigs configs;
 
-  const TCInstance({
-    required this.events,
+  TCInstance({
+    required List<TCEvent> events,
     required this.configs,
-    super.key,
-  });
+  }) : super(key: instanceKey) {
+    eventsRegistry.addAll({for (final e in events) e.uid: e});
+  }
 
   @override
   State<TCInstance> createState() => TCInstanceState();
@@ -44,6 +47,7 @@ class TCInstanceState extends State<TCInstance> {
     super.initState();
   }
 
+  /// Sets the [columnCount], [blockWidth], [blockHeight] for the instance
   void computeInstanceView() {
     columnCount = widget.configs.instanceView.columnCount;
     blockWidth =
@@ -51,6 +55,7 @@ class TCInstanceState extends State<TCInstance> {
     blockHeight = widget.configs.timescaleZoom.blockHeight;
   }
 
+  /// Computes the [mainViewDateScopeStart] and [mainViewDateScopeEnd]
   void computeMainView() {
     final DateTime dtNow = now();
     final DateTime nowDay = DateTime(dtNow.year, dtNow.month, dtNow.day);
@@ -58,17 +63,20 @@ class TCInstanceState extends State<TCInstance> {
         nowDay.subtract(Duration(days: dtNow.weekday - 1));
     mainViewDateScopeEnd = mainViewDateScopeStart
         .add(Duration(days: widget.configs.instanceView.dayCount));
-    eventsInView
-      ..clear()
-      ..addAll(cleanUpEventData(widget.events));
   }
 
+  /// Fetches events within the range of [mainViewDateScopeStart] and [mainViewDateScopeEnd]
   Iterable<TCEvent> cleanUpEventData(List<TCEvent> events) {
-    return events.where((e) =>
-        e.dtStart.isAfter(mainViewDateScopeStart) &&
-        e.dtEnd.isBefore(mainViewDateScopeEnd));
+    return eventsInView
+      ..clear()
+      ..addAll(
+        events.where((e) =>
+            e.dtStart.isAfter(mainViewDateScopeStart) &&
+            e.dtEnd.isBefore(mainViewDateScopeEnd)),
+      );
   }
 
+  /// Builds the [TCColumn]s for the week view
   List<TCColumn> buildTCColumnsForWeek() {
     final List<TCColumn> cols = [];
     for (int i = 0; i < columnCount; i++) {
@@ -93,6 +101,7 @@ class TCInstanceState extends State<TCInstance> {
     return cols;
   }
 
+  /// Builds the time marker column
   Widget buildTimeMarkers() {
     final List<Widget> timeMarkers = [];
     for (int i = 0; i < 24; i++) {
@@ -121,21 +130,28 @@ class TCInstanceState extends State<TCInstance> {
   }
 
   List<Widget> buildWeekDayLabels() {
-    return [
-      for (final d in dayLabels)
+    final List<Widget> labels = [];
+    for (int i = 0; i < dayLabels.length; i++) {
+      final DateTime dayDT = mainViewDateScopeStart.add(Duration(days: i));
+      labels.add(
         SizedBox(
           width: blockWidth,
           height: weekDayLabelsRowHeight,
           child: Center(
-            child: Text(d),
+            child: Text(
+                "${dayLabels[i]}, ${dayDT.day} ${MonthLabels.values[dayDT.month - 1].shortName}"),
           ),
         ),
-    ];
+      );
+    }
+    return labels;
   }
 
   Widget buildMainViewForWeek() {
+    cleanUpEventData(widget.eventsRegistry.values.toList());
     return Stack(
       children: [
+        // MainView
         Positioned(
           top: weekDayLabelsRowHeight + panelHeight,
           width: widget.configs.windowWidth,
@@ -158,6 +174,8 @@ class TCInstanceState extends State<TCInstance> {
             ),
           ),
         ),
+
+        // DayLabels
         Positioned(
           top: panelHeight,
           height: weekDayLabelsRowHeight,
@@ -182,6 +200,8 @@ class TCInstanceState extends State<TCInstance> {
             ]),
           ),
         ),
+
+        // Panel
         Positioned(
           width: widget.configs.windowWidth,
           height: panelHeight,
@@ -189,6 +209,42 @@ class TCInstanceState extends State<TCInstance> {
             width: widget.configs.windowWidth,
             height: panelHeight,
             color: widget.configs.panelColor,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        mainViewDateScopeStart = mainViewDateScopeStart
+                            .subtract(const Duration(days: 7));
+                        mainViewDateScopeEnd = mainViewDateScopeEnd
+                            .subtract(const Duration(days: 7));
+                      });
+                    },
+                    style: const ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(Colors.white),
+                    ),
+                    child: const Icon(Icons.chevron_left),
+                  ),
+                  const SizedBox(width: 10),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        mainViewDateScopeStart =
+                            mainViewDateScopeStart.add(const Duration(days: 7));
+                        mainViewDateScopeEnd =
+                            mainViewDateScopeEnd.add(const Duration(days: 7));
+                      });
+                    },
+                    style: const ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(Colors.white),
+                    ),
+                    child: const Icon(Icons.chevron_right),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],

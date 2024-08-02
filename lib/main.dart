@@ -9,8 +9,8 @@ void main() {
       events: [
         TCEvent(
           summary: "First Event",
-          dtStart: DateTime(2024, 6, 11, 17, 30).toUtc(),
-          dtEnd: DateTime(2024, 6, 11, 17, 30)
+          dtStart: DateTime(2024, 8, 11, 17, 30).toUtc(),
+          dtEnd: DateTime(2024, 8, 11, 17, 30)
               .toUtc()
               .add(const Duration(minutes: 90)),
           uid: "abc1",
