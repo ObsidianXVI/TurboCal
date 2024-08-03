@@ -1,6 +1,6 @@
 part of turbocal;
 
-final GlobalKey instanceKey = GlobalKey<TCInstanceState>();
+final GlobalKey<TCInstanceState> instanceKey = GlobalKey<TCInstanceState>();
 
 class TCInstance extends StatefulWidget {
   final Map<String, TCEvent> eventsRegistry = {};
@@ -253,16 +253,20 @@ class TCInstanceState extends State<TCInstance> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Center(
-        child: Container(
-          width: widget.configs.windowWidth,
-          height: widget.configs.windowHeight,
-          color: widget.configs.primaryColor,
-          child: widget.configs.instanceView == TCInstanceView.week
-              ? buildMainViewForWeek()
-              : const SizedBox(),
+    return MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Material(
+          child: Center(
+            child: Container(
+              width: widget.configs.windowWidth,
+              height: widget.configs.windowHeight,
+              color: widget.configs.primaryColor,
+              child: widget.configs.instanceView == TCInstanceView.week
+                  ? buildMainViewForWeek()
+                  : const SizedBox(),
+            ),
+          ),
         ),
       ),
     );

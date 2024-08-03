@@ -52,8 +52,20 @@ extension DateTimeUtils on DateTime {
         return 'NULL';
     }
   }
+
+  DateTime get midnight => DateTime(year, month, day);
+  Duration get offsetFromMidnight => difference(midnight);
 }
 
 extension NumUtils on num {
   String toDoubleDigitZeroPadded() => toString().padLeft(2, '0');
+}
+
+extension TCInstanceUtils on GlobalKey<TCInstanceState> {
+  void refreshInstance() {
+    (currentState as TCInstanceState).setState(() {});
+  }
+
+  Map<String, TCEvent> get eventsRegistry =>
+      (currentWidget as TCInstance).eventsRegistry;
 }

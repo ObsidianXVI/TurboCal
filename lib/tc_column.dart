@@ -64,19 +64,43 @@ class TCColumnState extends State<TCColumn> {
         ),
       );
     }
-    return SizedBox(
-      /// This stack contains the time marker grid and event canvas
-      child: Stack(
-        children: [
-          Column(children: timeMarkerBlocks),
-          TCEventCanvas(
-            dayStamp: widget.dayStamp,
-            events: widget.events,
-            configs: widget.configs,
-            maxWidth: widget.blockWidth - defaultFixedEventCanvasIndent,
+    return DragTarget<TCEvent>(
+      onMove: (details) {},
+      onWillAccept: (_) => true,
+      onAccept: (event) {
+        // old - new
+        // negative if event is moved forward in time
+        final Duration deltaShift =
+            event.dtStart.midnight.difference(widget.dayStamp);
+
+        instanceKey.eventsRegistry
+          ..remove(event.uid)
+          ..addAll({
+            event.uid: TCEvent.cloneFrom(
+              event,
+              dtStart: event.dtStart.subtract(deltaShift),
+              dtEnd: event.dtEnd.subtract(deltaShift),
+            )
+          });
+
+        instanceKey.refreshInstance();
+      },
+      builder: (context, candidateData, rejectedData) {
+        return SizedBox(
+          /// This stack contains the time marker grid and event canvas
+          child: Stack(
+            children: [
+              Column(children: timeMarkerBlocks),
+              TCEventCanvas(
+                dayStamp: widget.dayStamp,
+                events: widget.events,
+                configs: widget.configs,
+                maxWidth: widget.blockWidth - defaultFixedEventCanvasIndent,
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

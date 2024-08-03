@@ -17,6 +17,7 @@ class TCConfigs {
   final Color panelColor;
   final double windowWidth;
   final double windowHeight;
+  final int eventUpdateGranularityMinutes;
   final DateTime? mainViewDateScopeStart;
 
   final TCWidgetBuilder<String>? eventTitleBuilder;
@@ -33,6 +34,7 @@ class TCConfigs {
     required this.metaColor,
     required this.windowHeight,
     required this.windowWidth,
+    this.eventUpdateGranularityMinutes = 15,
     this.mainViewDateScopeStart,
     this.eventTitleBuilder,
     this.timeMarkerBuilder,
